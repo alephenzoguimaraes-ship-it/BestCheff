@@ -1,75 +1,73 @@
 # BestCheff 🍽️
 
-Sistema web de gestão para restaurantes — painel central de controle conectado ao banco de dados das lojas.
+A web system designed to streamline order (comanda) management, intended to be used by waitstaff. The system simplifies the cashier's workflow, who only needs to settle the bill at checkout.
 
-## 🛠️ Tecnologias
+## 🛠️ Technologies
 
-| Tecnologia | Versão |
+| Technology | Version |
 |---|---|
 | Java (JDK) | 21 |
 | Jakarta Servlet / JSP | — |
 | JSTL | 3.0 |
-| Driver JDBC (Firebird) | Jaybird |
-| Banco de Dados | Firebird |
-| Servidor | Apache Tomcat 11 |
+| JDBC Driver (Firebird) | Jaybird |
+| Database | Firebird |
+| Server | Apache Tomcat 11 |
 | IDE | Eclipse |
 
-## 📋 Funcionalidades
+## 📋 Features
 
-- Gestão de comandas
-- Gerenciamento de produtos
-- Controle de vendas
-- Emissão de NF-e (Nota Fiscal Eletrônica)
-- Painel centralizado multi-loja
+- Order (comanda) management
+- Product management
+- Order tracking
 
-## ⚙️ Pré-requisitos
+## ⚙️ Prerequisites
 
-Antes de rodar o projeto, você precisa ter instalado:
+Before running the project, make sure you have the following installed:
 
 - [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21)
 - [Apache Tomcat 11](https://tomcat.apache.org/download-11.cgi)
-- [Firebird](https://firebirdsql.org/en/firebird-5-0/) (banco de dados)
+- [Firebird](https://firebirdsql.org/en/firebird-5-0/) (database)
 - [Eclipse IDE for Enterprise Java](https://www.eclipse.org/downloads/)
 
-## 🚀 Como rodar no Eclipse
+## 🚀 How to run in Eclipse
 
-1. Clone o repositório:
+1. Clone the repository:
    ```bash
-   git clone https://github.com/seu-usuario/BestCheff.git
+   git clone https://github.com/your-username/BestCheff.git
    ```
 
-2. Abra o Eclipse e vá em:
+2. Open Eclipse and go to:
    `File → Import → Existing Projects into Workspace`
 
-3. Selecione a pasta do projeto clonado.
+3. Select the cloned project folder.
 
-4. Configure o servidor Tomcat 11 em:
+4. Configure the Tomcat 11 server at:
    `Window → Preferences → Server → Runtime Environments`
 
-5. Configure a conexão com o banco Firebird no arquivo de propriedades do projeto.
+5. Set up the Firebird database connection in the project properties file.
 
-6. Clique com o botão direito no projeto:
-   `Run As → Run on Server` e selecione o Tomcat 11.
+6. Right-click the project and select:
+   `Run As → Run on Server`, then choose Tomcat 11.
 
-## 🗄️ Banco de Dados
+## 🗄️ Database
 
-O sistema utiliza **Firebird** como banco de dados. Certifique-se de que o serviço do Firebird está rodando antes de iniciar a aplicação.
+The system uses **Firebird** as its database. Make sure the Firebird service is running before starting the application.
 
-A conexão é feita via **JDBC** usando o driver **Jaybird**.
+The connection is made via **JDBC** using the **Jaybird** driver.
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
 ```
 BestCheff/
 ├── src/
 │   └── main/
-│       ├── java/        # Servlets e lógica de negócio
-│       └── webapp/      # JSPs, CSS, JS
-├── BaseDados/           # Scripts SQL / estrutura do banco
+│       ├── java/        # Servlets and business logic
+│       └── webapp/      # JSP, CSS, JS
+├── BaseDados/           # SQL scripts / database structure
 ├── .gitignore
 └── README.md
 ```
 
-## 👤 Autor
+## 👤 Author
 
-Desenvolvido por **Aleph**
+Developed by **Aleph Enzo Guimarães da Silva**
