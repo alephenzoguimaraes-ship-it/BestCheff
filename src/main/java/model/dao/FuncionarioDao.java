@@ -1,0 +1,41 @@
+package model.dao;
+
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import JDBC.JdbcConnection;
+import model.beans.FuncionarioBeans;
+
+public class FuncionarioDao {
+	PreparedStatement pstm;
+	ResultSet rs;
+	JdbcConnection con = new JdbcConnection();
+	
+	public void logarFuncionario(FuncionarioBeans funcionario) {
+		String logar = "SELECT * FROM SP_LOGAR (?, ?)";
+		try {
+			pstm = con.conectar().prepareStatement(logar);
+			pstm.setString(1, funcionario.getLoginFuncionario().toUpperCase());
+			pstm.setString(2, funcionario.getSenhaFuncionario().toUpperCase());
+			rs = pstm.executeQuery();
+			while(rs.next()) {
+				funcionario.setCodFuncionario(rs.getInt("COD_FUNCIONARIO"));
+				funcionario.setNomeFuncionario(rs.getString("NOME_FUNCIONARIO"));
+				funcionario.setFuncaoFuncionario(rs.getString("FUNCAO_FUNCIONARIO"));
+				funcionario.setAdmissaoFuncionario(rs.getDate("ADMISSAO_FUNCIONARIO"));
+				funcionario.setAcessoTotal(rs.getInt("ACESSO_TOTAL"));
+				funcionario.setTelefone(rs.getString("TELEFONE"));
+				funcionario.setCelular(rs.getString("CELULAR"));
+				funcionario.setEmail(rs.getString("EMAIL"));
+				funcionario.setCpf(rs.getString("CPF"));
+				funcionario.setComissao(BigDecimal.valueOf(rs.getDouble("COMISSAO")));
+				funcionario.setRg(rs.getString("RG"));
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			con.desconectar();
+		}
+	}
+}
