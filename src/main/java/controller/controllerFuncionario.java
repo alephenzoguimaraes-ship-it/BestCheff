@@ -17,22 +17,42 @@ import model.dao.ProdutoDao;
 import java.io.IOException;
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
 /**
- * Servlet implementation class controllerFuncionario
+ * Servlet implementation class controllerFuncionario.
+ *
  * @author alephe
  */
 @WebServlet(name = "controllerFuncionario", urlPatterns = {"/controllerFuncionario", "/login-funcionario", "/comandas/buscar-status-comanda", "/comandas/abrir-comanda", "/comandas/buscar-prod", "/comandas/insert-comanda"})
 public class controllerFuncionario extends HttpServlet {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The fun. */
 	private FuncionarioBeans fun = new FuncionarioBeans();
+	
+	/** The com. */
 	private ComandaBeans com = new ComandaBeans();
+	
+	/** The c det. */
 	private ComandaDetBeans cDet = new ComandaDetBeans();
+	
+	/** The dao funcionario. */
 	private FuncionarioDao daoFuncionario = new FuncionarioDao();
+	
+	/** The dao produto. */
 	private ProdutoDao daoProduto = new ProdutoDao();
+	
+	/** The dao comanda. */
 	private ComandaDao daoComanda = new ComandaDao();
+	
+	/** The action. */
 	private String action;
        
     /**
+     * Instantiates a new controller funcionario.
+     *
      * @see HttpServlet#HttpServlet()
      */
     public controllerFuncionario() {
@@ -40,6 +60,12 @@ public class controllerFuncionario extends HttpServlet {
     }
 
 	/**
+	 * Do get.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,6 +75,12 @@ public class controllerFuncionario extends HttpServlet {
 	}
 
 	/**
+	 * Do post.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -82,6 +114,14 @@ public class controllerFuncionario extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Logar.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void logar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		fun.setLoginFuncionario(request.getParameter("usuario"));
 		fun.setSenhaFuncionario(request.getParameter("senha"));
@@ -90,22 +130,27 @@ public class controllerFuncionario extends HttpServlet {
 			request.getSession().setAttribute("MSG-ERRO-LOGIN", "usuário ou senha errado!");
 			response.sendRedirect("index.jsp");
 		} else {
-			// Manda informações de quem logou
 			request.getSession().setAttribute("INFO-FUNCIONARIO-NAME", fun.getNomeFuncionario());
 			request.getSession().setAttribute("INFO-FUNCIONARIO-COD", fun.getCodFuncionario());
 			System.out.println("Cod: "+fun.getCodFuncionario());
 			System.out.println("Nome: "+fun.getNomeFuncionario());
 			
-			// Lista todos os produtos
 			ArrayList<ProdutoBeans> produtos = new ArrayList<>();
 			produtos = daoProduto.listarProdutos();
 			request.getSession().setAttribute("mostrar-produtos", produtos);
 			
-			// manda para a tela onde o garçom irá preencher as informações
 			response.sendRedirect("comandas/comanda.jsp");
 		}
 	}
 	
+	/**
+	 * Buscar status comanda.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void buscarStatusComanda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		daoComanda.buscarComandaStatus(com, request.getParameter("codComanda").toString(), request.getParameter("nomeComanda").toString(), fun.getCodFuncionario());
 		request.setAttribute("status-comanda", com.getStatusComanda().trim());
@@ -114,6 +159,14 @@ public class controllerFuncionario extends HttpServlet {
 		rd.forward(request, response);
 	}
 	
+	/**
+	 * Abrir comanda.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void abrirComanda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(com.getStatusComanda().equals("Fechado")) {
 			System.out.println("Abrindo comanda: "+com.getIdComanda());
@@ -130,6 +183,14 @@ public class controllerFuncionario extends HttpServlet {
 		}
 	}
 	
+	/**
+	 * Buscar produto.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void buscarProduto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<ProdutoBeans> produtos = new ArrayList<ProdutoBeans>();
 		produtos = daoProduto.buscarProdutoNome(request.getParameter("nomeProduto"));
@@ -138,6 +199,14 @@ public class controllerFuncionario extends HttpServlet {
 		rd.forward(request, response);
 	}
 	
+	/**
+	 * Inserir comanda.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void inserirComanda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Qtde: "+request.getParameter("qtde").replaceAll("[^0-9.,]", "").replace(".", "").replace(",", "."));
 		cDet.setQtdeComandaDetalhe(Double.parseDouble(request.getParameter("qtde").replaceAll("[^0-9.,]", "").replace(".", "").replace(",", ".")));

@@ -7,13 +7,32 @@ import java.util.ArrayList;
 import JDBC.JdbcConnection;
 import model.beans.ProdutoBeans;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProdutoDao.
+ */
 public class ProdutoDao {
+	
+	/** The pstm. */
 	private PreparedStatement pstm;
+	
+	/** The rs. */
 	private ResultSet rs;
+	
+	/** The conexao. */
 	private JdbcConnection conexao = new JdbcConnection();
+	
+	/** The listar todos. */
 	private final String listarTodos = "SELECT * FROM PRODUTO";
+	
+	/** The buscar prod nome. */
 	private final String buscarProdNome = "SELECT * FROM PRODUTO r where upper(r.DESCRICAO_PRODUTO) like upper('%' || ? || '%');";
 	
+	/**
+	 * Listar produtos.
+	 *
+	 * @return the array list
+	 */
 	public ArrayList<ProdutoBeans> listarProdutos() {
 		ArrayList<ProdutoBeans> produtos = new ArrayList<ProdutoBeans>();
 		try {
@@ -35,6 +54,12 @@ public class ProdutoDao {
 		}
 	}
 	
+	/**
+	 * Buscar produto nome.
+	 *
+	 * @param nome the nome
+	 * @return the array list
+	 */
 	public ArrayList<ProdutoBeans> buscarProdutoNome(String nome) {
 		ArrayList<ProdutoBeans> produtos = new ArrayList<ProdutoBeans>();
 		try {

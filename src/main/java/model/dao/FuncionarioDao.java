@@ -7,11 +7,26 @@ import java.sql.ResultSet;
 import JDBC.JdbcConnection;
 import model.beans.FuncionarioBeans;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class FuncionarioDao.
+ */
 public class FuncionarioDao {
+	
+	/** The pstm. */
 	PreparedStatement pstm;
+	
+	/** The rs. */
 	ResultSet rs;
+	
+	/** The con. */
 	JdbcConnection con = new JdbcConnection();
 	
+	/**
+	 * Logar funcionario.
+	 *
+	 * @param funcionario the funcionario
+	 */
 	public void logarFuncionario(FuncionarioBeans funcionario) {
 		String logar = "SELECT * FROM SP_LOGAR (?, ?)";
 		try {

@@ -9,11 +9,29 @@ import model.beans.ComandaDetBeans;
 import model.beans.FuncionarioBeans;
 import model.beans.ProdutoBeans;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ComandaDao.
+ */
 public class ComandaDao {
+	
+	/** The pstm. */
 	PreparedStatement pstm;
+	
+	/** The rs. */
 	ResultSet rs;
+	
+	/** The conexao. */
 	JdbcConnection conexao = new JdbcConnection();
 	
+	/**
+	 * Buscar comanda status.
+	 *
+	 * @param cb the cb
+	 * @param codComanda the cod comanda
+	 * @param barraComanda the barra comanda
+	 * @param codFuncionario the cod funcionario
+	 */
 	public void buscarComandaStatus(ComandaBeans cb, String codComanda, String barraComanda, int codFuncionario) {
 	    String busca = "SELECT p.R_ID_COMANDA, p.R_ID_BLOCO_COMANDA, p.R_COD_BARRAS, p.R_STATUS_COMANDA FROM SP_PESQUI_COD_BARRAS_COM (?, ?, ?) p;";
 	    try {
@@ -41,6 +59,11 @@ public class ComandaDao {
 	    }
 	}
 	
+	/**
+	 * Abrir comanda.
+	 *
+	 * @param cb the cb
+	 */
 	public void abrirComanda(ComandaBeans cb) {
 		String abrirComanda = "UPDATE COMANDA\n"
 				+ "SET    STATUS_COMANDA    = 'Aberto',\n"
@@ -59,6 +82,14 @@ public class ComandaDao {
 		}
 	}
 	
+	/**
+	 * Inserir comanda.
+	 *
+	 * @param cb the cb
+	 * @param cdb the cdb
+	 * @param fb the fb
+	 * @param codProd the cod prod
+	 */
 	public void inserirComanda(ComandaBeans cb, ComandaDetBeans cdb, FuncionarioBeans fb, String codProd) {
 		String insert = "INSERT INTO COMANDA_DETALHE (ID_COMANDA_DETALHE, RF_ID_COMANDA, RF_ID_PRODUTO,\n"
 				+ "    QTDE_COMANDA_DETALHE, VLR_UNITARIO_COMANDA_DETALHE,\n"
