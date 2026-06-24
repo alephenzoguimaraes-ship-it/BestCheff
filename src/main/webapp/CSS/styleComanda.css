@@ -419,3 +419,106 @@ td.qtde  { color: #f59e0b; font-weight: 600; text-align: right; }
     height: 14px;
     background: rgba(255,255,255,0.08);
 }
+
+@media (max-width: 850px) and (orientation: portrait) {
+    body {
+        height: auto !important;
+        overflow: auto !important;
+        padding: 8px !important;
+    }
+
+    .tela {
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .paineis {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .painel-esq {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+        overflow: visible !important;
+        padding: 12px !important;
+    }
+
+    .painel-dir {
+        width: 100% !important;
+        overflow: visible !important;
+        padding: 16px !important;
+    }
+
+    .busca-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+    }
+
+    .inp-sm {
+        max-width: 100% !important;
+    }
+
+    .btn-ok, .busca-row .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .tabela-wrap {
+        max-height: 280px !important;
+        overflow-y: auto !important;
+        overflow-x: auto !important;
+    }
+
+    table {
+        min-width: 420px !important;
+    }
+}
+
+@media (max-height: 550px) and (orientation: landscape) {
+    body {
+        height: auto !important;
+        overflow: auto !important;
+        padding: 10px !important;
+    }
+
+    .tela {
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .paineis {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .painel-esq, .painel-dir {
+        height: auto !important;
+        overflow: visible !important;
+        padding: 14px !important;
+    }
+
+    .painel-esq {
+        border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
+    }
+
+    .busca-row {
+        flex-wrap: wrap !important;
+    }
+
+    .tabela-wrap {
+        max-height: 200px !important;
+        overflow-y: auto !important;
+        overflow-x: auto !important;
+    }
+
+    table {
+        min-width: 380px !important;
+    }
+}

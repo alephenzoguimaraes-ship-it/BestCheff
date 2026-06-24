@@ -118,6 +118,7 @@ public class controllerFuncionario extends HttpServlet {
 		if(com.getStatusComanda().equals("Fechado")) {
 			System.out.println("Abrindo comanda: "+com.getIdComanda());
 			daoComanda.abrirComanda(com);
+			request.setAttribute("status-comanda", com.getStatusComanda());
 			request.setAttribute("focar-pesq-produto", "pesq-nome-produto");
 			RequestDispatcher rd = request.getRequestDispatcher("/comandas/comanda.jsp");
 			rd.forward(request, response);
@@ -144,7 +145,6 @@ public class controllerFuncionario extends HttpServlet {
 		cDet.setVlrUnitarioComandaDetalhe(Double.parseDouble(request.getParameter("vlr").replaceAll("[^0-9.,]", "").replace(".", "").replace(",", ".")));
 		cDet.setVlrTotFinalComandaDetalhe(Double.parseDouble(request.getParameter("total").replaceAll("[^0-9.,]", "").replace(".", "").replace(",", ".")));
 		daoComanda.inserirComanda(com, cDet, fun, request.getParameter("cod"));
-		daoComanda.fecharComanda(com);
 		ArrayList<ProdutoBeans> produtos = new ArrayList<>();
 		produtos = daoProduto.listarProdutos();
 		request.getSession().setAttribute("mostrar-produtos", produtos);

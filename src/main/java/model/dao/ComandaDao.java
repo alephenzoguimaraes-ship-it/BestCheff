@@ -49,23 +49,8 @@ public class ComandaDao {
 		try {
 			pstm = conexao.conectar().prepareStatement(abrirComanda);
 			pstm.setLong(1, cb.getIdComanda());
+			cb.setStatusComanda("Aberto");
 			pstm.executeUpdate();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		} finally {
-			conexao.desconectar();
-		}
-	}
-	
-	public void fecharComanda(ComandaBeans cb) {
-		String fecharComanda = "UPDATE COMANDA\n"
-				+ "SET    STATUS_COMANDA    = 'Fechado'\n"
-				+ "WHERE  ID_COMANDA = ?;";
-		try {
-			pstm = conexao.conectar().prepareStatement(fecharComanda);
-			pstm.setLong(1, cb.getIdComanda());
-			pstm.execute();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

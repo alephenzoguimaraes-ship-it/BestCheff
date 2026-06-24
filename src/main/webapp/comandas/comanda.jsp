@@ -165,16 +165,18 @@
 	                    </svg>
 	                    Enviar
 	                </button>
-                <form id="formAbrirComanda" name="form-abrir-comanda" action="abrir-comanda" method="post" style="width:100%">
+            </div>
+		</form>
+			<div class="btns-acao">
+				<form id="formAbrirComanda" name="form-abrir-comanda" action="abrir-comanda" method="post" style="width:100%">
 	                <button class="btn btn-primary" style="justify-content:center; width:100%" type="submit">
 	                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 	                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
 	                    </svg>
 	                    Abrir Comanda
 	                </button>
-                </form>                
-            </div>
-		</form>
+                </form>
+			</div>
             <!-- Status comanda -->
             <div class="status-comanda">
                 <div class="status-item">
@@ -307,10 +309,21 @@
 	
 	<%
 		String focusPesquisa = (String) request.getAttribute("focar-pesq-produto");
-		if(focusPesquisa != null) {
+		String statusComanda2 = (String) request.getAttribute("status-comanda");
+		if(focusPesquisa != null && statusComanda2 != null) {
 	%>
 		<script>
-			document.getElementById("pesq-nome-produto").focus();
+			let status = "<%= statusComanda2 %>";
+			let alertOpen = document.getElementById('ball-open');
+		    let alertClose = document.getElementById('ball-close');
+			if(status.trim() === "Aberto") {
+				alertOpen.style.background = "#34d399";
+		        alertOpen.style.boxShadow = "0 0 8px 2px #34d399";
+				document.getElementById("pesq-nome-produto").focus();
+			} else if(status.trim() === "Fechado") {
+				alertClose.style.background = "#f87171";
+				alertClose.style.boxShadow = "0 0 8px 2px #f87171";
+			}
 		</script>
 	<%
 		}
@@ -344,6 +357,7 @@
 	<script>
 		<% String msgGravou = (String) session.getAttribute("gravou"); 
 			if(msgGravou != null) {
+			session.removeAttribute("gravou");
 		%>
 			mostrarModal("<%= msgGravou %>");
 		<%
