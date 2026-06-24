@@ -7,8 +7,7 @@ A web system designed to streamline order (comanda) management, intended to be u
 | Technology | Version |
 |---|---|
 | Java (JDK) | 21 |
-| Jakarta Servlet / JSP | — |
-| JSTL | 3.0 |
+| Jakarta Servlet / JSP | 11 |
 | JDBC Driver (Firebird) | Jaybird |
 | Database | Firebird |
 | Server | Apache Tomcat 11 |
