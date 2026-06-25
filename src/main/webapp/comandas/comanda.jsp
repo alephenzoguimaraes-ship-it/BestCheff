@@ -188,6 +188,16 @@
                     <span>Comanda Fechada</span>
                 </div>
             </div>
+            
+            <!-- Botão Conferência -->
+			<button class="btn btn-conferencia" onclick="cliqueConf()">
+			    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+			        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+			        <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"></path>
+			        <rect x="6" y="14" width="12" height="8"></rect>
+			    </svg>
+			    Conferência
+			</button>
 
         </div>
         <!-- /painel dir -->
@@ -199,6 +209,12 @@
         <span>Comanda Digital</span>
         <em id="info-funcionario"></em>
     </div>
+	
+	<script>
+		function cliqueConf() {
+			mostrarModal("Enviando impressão...");	
+		}
+	</script>
 	
 	<script>
 	<% String verify = (String) request.getAttribute("status-comanda"); %>
