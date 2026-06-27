@@ -2,6 +2,9 @@ package model.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import org.eclipse.jdt.internal.compiler.ast.ArrayAllocationExpression;
 
 import JDBC.JdbcConnection;
 import model.beans.ComandaBeans;
@@ -47,10 +50,10 @@ public class ComandaDao {
 	        }
 	        rs = pstm.executeQuery();
 	        while (rs.next()) {
-	        	cb.setIdComanda(rs.getLong(1));
-	        	cb.setIdBlocoComanda(rs.getInt(2));
-	        	cb.setCodBarraBlocoComanda(rs.getString(3));
-	            cb.setStatusComanda(rs.getString(4));
+	        	cb.setIdComanda(rs.getLong("R_ID_COMANDA"));
+	        	cb.setIdBlocoComanda(rs.getInt("R_ID_BLOCO_COMANDA"));
+	        	cb.setCodBarraBlocoComanda(rs.getString("R_COD_BARRAS"));
+	            cb.setStatusComanda(rs.getString("R_STATUS_COMANDA"));
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -126,6 +129,44 @@ public class ComandaDao {
 			pstm.execute();
 		} catch(Exception e) {
 			e.printStackTrace();
+		} finally {
+			conexao.desconectar();
+		}
+	}
+	
+	/**
+	 * Buscar todas comandas det.
+	 *
+	 * @param comandaBeans the comanda beans
+	 * @return the array list
+	 */
+	public ArrayList<ComandaDetBeans> buscarTodasComandasDet(ComandaBeans comandaBeans) {
+		String buscar = "SELECT r.ID_COMANDA_DETALHE, r.RF_ID_COMANDA, r.RF_ID_PRODUTO, upper(p.DESCRICAO_PRODUTO),\n"
+				+ "    r.QTDE_COMANDA_DETALHE, r.VLR_UNITARIO_COMANDA_DETALHE,\n"
+				+ "    r.VLR_TOTAL_COMANDA_DETALHE, r.VLR_DESCONTO_COMANDA_DETALHE,\n"
+				+ "    r.VLR_ACRESCIMO_COMANDA_DETALHE, r.VLR_TOT_FINAL_COMANDA_DETALHE,\n"
+				+ "    r.DATA_COMANDA, r.HORA_COMANDA, r.RF_ID_FUNCIONARIO, r.GRAVACAO,\n"
+				+ "    r.COMANDA_DETALHE_ITEM\n"
+				+ "FROM COMANDA_DETALHE r\n"
+				+ "inner join PRODUTO p ON r.RF_ID_PRODUTO = p.COD_PRODUTO\n"
+				+ "WHERE r.ID_COMANDA_DETALHE = ? and r.RF_ID_COMANDA = ?\n"
+				+ "order by r.ID_COMANDA_DETALHE desc";
+		ArrayList<ComandaDetBeans> comandasDetalhe = new ArrayList<>();
+		try {
+			pstm = conexao.conectar().prepareStatement(buscar);
+			pstm.setLong(1, comandaBeans.getIdComanda());
+			pstm.setLong(2, comandaBeans.getIdComanda());
+			rs = pstm.executeQuery();
+			while(rs.next()) {
+				comandasDetalhe.add(new ComandaDetBeans(rs.getLong("ID_COMANDA_DETALHE"), rs.getLong("RF_ID_COMANDA"), rs.getString("RF_ID_PRODUTO"), rs.getString("UPPER"), rs.getDouble("QTDE_COMANDA_DETALHE"),
+						rs.getDouble("VLR_UNITARIO_COMANDA_DETALHE"), rs.getDouble("VLR_TOTAL_COMANDA_DETALHE"), rs.getDouble("VLR_DESCONTO_COMANDA_DETALHE"),
+						rs.getDouble("VLR_ACRESCIMO_COMANDA_DETALHE"), rs.getDouble("VLR_TOT_FINAL_COMANDA_DETALHE"), rs.getDate("DATA_COMANDA"), rs.getTime("HORA_COMANDA"),
+						rs.getInt("RF_ID_FUNCIONARIO"), rs.getTimestamp("GRAVACAO"), rs.getInt("COMANDA_DETALHE_ITEM")));
+			}
+			return comandasDetalhe;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		} finally {
 			conexao.desconectar();
 		}

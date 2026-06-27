@@ -420,6 +420,10 @@ td.qtde  { color: #f59e0b; font-weight: 600; text-align: right; }
     background: rgba(255,255,255,0.08);
 }
 
+.painel-dir form {
+    width: 100%;
+}
+
 .btn-conferencia {
     display: flex;
     align-items: center;
@@ -429,6 +433,7 @@ td.qtde  { color: #f59e0b; font-weight: 600; text-align: right; }
     border: 1px solid rgba(245,158,11,0.3);
     color: #fbbf24;
     box-shadow: 0 4px 14px rgba(245,158,11,0.12);
+    width: 100%;
 }
 
 @media (max-width: 850px) and (orientation: portrait) {

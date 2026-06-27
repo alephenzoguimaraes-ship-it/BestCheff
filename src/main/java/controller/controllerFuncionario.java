@@ -16,6 +16,7 @@ import model.dao.ProdutoDao;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import impressions.printComandInvoiceOrder;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  *
  * @author alephe
  */
-@WebServlet(name = "controllerFuncionario", urlPatterns = {"/controllerFuncionario", "/login-funcionario", "/comandas/buscar-status-comanda", "/comandas/abrir-comanda", "/comandas/buscar-prod", "/comandas/insert-comanda"})
+@WebServlet(name = "controllerFuncionario", urlPatterns = {"/controllerFuncionario", "/login-funcionario", "/comandas/buscar-status-comanda", "/comandas/abrir-comanda", "/comandas/buscar-prod", "/comandas/insert-comanda", "/comandas/send-invoice"})
 public class controllerFuncionario extends HttpServlet {
 	
 	/** The Constant serialVersionUID. */
@@ -46,6 +47,9 @@ public class controllerFuncionario extends HttpServlet {
 	
 	/** The dao comanda. */
 	private ComandaDao daoComanda = new ComandaDao();
+	
+	/** The comand invoice order. */
+	private printComandInvoiceOrder comandInvoiceOrder = new printComandInvoiceOrder();
 	
 	/** The action. */
 	private String action;
@@ -70,8 +74,8 @@ public class controllerFuncionario extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("ISO8859_1");
+		response.setCharacterEncoding("ISO8859_1");
 	}
 
 	/**
@@ -84,8 +88,8 @@ public class controllerFuncionario extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("ISO8859_1");
+		response.setCharacterEncoding("ISO8859_1");
 		action = request.getServletPath();
 		System.out.println("Controller in: "+action);
 		switch (action) {
@@ -107,6 +111,10 @@ public class controllerFuncionario extends HttpServlet {
 		}
 		case "/comandas/insert-comanda": {
 			inserirComanda(request, response);
+			break;
+		}
+		case "/comandas/send-invoice": {
+			printComandInvoiceOrder(request, response);
 			break;
 		}
 		default:
@@ -154,6 +162,7 @@ public class controllerFuncionario extends HttpServlet {
 	protected void buscarStatusComanda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		daoComanda.buscarComandaStatus(com, request.getParameter("codComanda").toString(), request.getParameter("nomeComanda").toString(), fun.getCodFuncionario());
 		request.setAttribute("status-comanda", com.getStatusComanda().trim());
+		System.out.println("Id comanda: "+com.getIdComanda());
 		System.out.println("Status retornado: "+com.getStatusComanda().trim());
 		RequestDispatcher rd = request.getRequestDispatcher("/comandas/comanda.jsp");
 		rd.forward(request, response);
@@ -218,6 +227,25 @@ public class controllerFuncionario extends HttpServlet {
 		produtos = daoProduto.listarProdutos();
 		request.getSession().setAttribute("mostrar-produtos", produtos);
 		request.getSession().setAttribute("gravou", "Comanda gravada com sucesso");
+		response.sendRedirect("./comanda.jsp");
+	}
+	
+	/**
+	 * Prints the comand invoice order.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	protected void printComandInvoiceOrder(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ArrayList<ComandaDetBeans> comandasDetalhes = new ArrayList<>();
+		comandasDetalhes = daoComanda.buscarTodasComandasDet(com);
+		comandInvoiceOrder.printInvoice(comandasDetalhes);
+		ArrayList<ProdutoBeans> produtos = new ArrayList<>();
+		produtos = daoProduto.listarProdutos();
+		request.getSession().setAttribute("mostrar-produtos", produtos);
+		request.getSession().setAttribute("get-invoice", "Impressão de nota fiscal enviada com sucesso!");
 		response.sendRedirect("./comanda.jsp");
 	}
 }
