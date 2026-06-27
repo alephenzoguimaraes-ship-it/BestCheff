@@ -212,7 +212,7 @@
 	
 	<script>
 		function cliqueConf() {
-			mostrarModal("Enviando impressão...");	
+			mostrarModal("Enviando impressão...");
 		}
 	</script>
 	
