@@ -17,6 +17,9 @@ public class ComandaDetBeans {
 	/** The id comanda. */
 	private long idComanda;
 	
+	/** The id bloco comanda. */
+	private int idBlocoComanda;
+	
 	/** The id produto. */
 	private String idProduto;
 	
@@ -61,6 +64,7 @@ public class ComandaDetBeans {
 	 *
 	 * @param idComandaDetalhe the id comanda detalhe
 	 * @param idComanda the id comanda
+	 * @param idBlocoComanda the id bloco comanda
 	 * @param idProduto the id produto
 	 * @param descricaoProduto the descricao produto
 	 * @param qtdeComandaDetalhe the qtde comanda detalhe
@@ -75,12 +79,14 @@ public class ComandaDetBeans {
 	 * @param gravacao the gravacao
 	 * @param comandaDetalheItem the comanda detalhe item
 	 */
-	public ComandaDetBeans(long idComandaDetalhe, long idComanda, String idProduto, String descricaoProduto,
-			double qtdeComandaDetalhe, double vlrUnitarioComandaDetalhe, double vlrTotalComandaDetalhe,
-			double vlrDescontoComandaDetalhe, double vlrAcrescimoComandaDetalhe, double vlrTotFinalComandaDetalhe,
-			Date dataComanda, Time horaComanda, int idFuncionario, Timestamp gravacao, int comandaDetalheItem) {
+	public ComandaDetBeans(long idComandaDetalhe, long idComanda, int idBlocoComanda, String idProduto,
+			String descricaoProduto, double qtdeComandaDetalhe, double vlrUnitarioComandaDetalhe,
+			double vlrTotalComandaDetalhe, double vlrDescontoComandaDetalhe, double vlrAcrescimoComandaDetalhe,
+			double vlrTotFinalComandaDetalhe, Date dataComanda, Time horaComanda, int idFuncionario, Timestamp gravacao,
+			int comandaDetalheItem) {
 		this.idComandaDetalhe = idComandaDetalhe;
 		this.idComanda = idComanda;
+		this.idBlocoComanda = idBlocoComanda;
 		this.idProduto = idProduto;
 		this.descricaoProduto = descricaoProduto;
 		this.qtdeComandaDetalhe = qtdeComandaDetalhe;
@@ -137,6 +143,24 @@ public class ComandaDetBeans {
 	 */
 	public void setIdComanda(long idComanda) {
 		this.idComanda = idComanda;
+	}
+
+	/**
+	 * Gets the id bloco comanda.
+	 *
+	 * @return the id bloco comanda
+	 */
+	public int getIdBlocoComanda() {
+		return idBlocoComanda;
+	}
+
+	/**
+	 * Sets the id bloco comanda.
+	 *
+	 * @param idBlocoComanda the new id bloco comanda
+	 */
+	public void setIdBlocoComanda(int idBlocoComanda) {
+		this.idBlocoComanda = idBlocoComanda;
 	}
 
 	/**
@@ -374,31 +398,14 @@ public class ComandaDetBeans {
 	}
 
 	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String toString() {
-		return "ComandaDetBeans [idComandaDetalhe=" + idComandaDetalhe + ", idComanda=" + idComanda + ", idProduto="
-				+ idProduto + ", descricaoProduto=" + descricaoProduto + ", qtdeComandaDetalhe=" + qtdeComandaDetalhe
-				+ ", vlrUnitarioComandaDetalhe=" + vlrUnitarioComandaDetalhe + ", vlrTotalComandaDetalhe="
-				+ vlrTotalComandaDetalhe + ", vlrDescontoComandaDetalhe=" + vlrDescontoComandaDetalhe
-				+ ", vlrAcrescimoComandaDetalhe=" + vlrAcrescimoComandaDetalhe + ", vlrTotFinalComandaDetalhe="
-				+ vlrTotFinalComandaDetalhe + ", dataComanda=" + dataComanda + ", horaComanda=" + horaComanda
-				+ ", idFuncionario=" + idFuncionario + ", gravacao=" + gravacao + ", comandaDetalheItem="
-				+ comandaDetalheItem + "]";
-	}
-
-	/**
 	 * Hash code.
 	 *
 	 * @return the int
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(comandaDetalheItem, dataComanda, descricaoProduto, gravacao, horaComanda, idComanda,
-				idComandaDetalhe, idFuncionario, idProduto, qtdeComandaDetalhe, vlrAcrescimoComandaDetalhe,
+		return Objects.hash(comandaDetalheItem, dataComanda, descricaoProduto, gravacao, horaComanda, idBlocoComanda,
+				idComanda, idComandaDetalhe, idFuncionario, idProduto, qtdeComandaDetalhe, vlrAcrescimoComandaDetalhe,
 				vlrDescontoComandaDetalhe, vlrTotFinalComandaDetalhe, vlrTotalComandaDetalhe,
 				vlrUnitarioComandaDetalhe);
 	}
@@ -420,9 +427,9 @@ public class ComandaDetBeans {
 		ComandaDetBeans other = (ComandaDetBeans) obj;
 		return comandaDetalheItem == other.comandaDetalheItem && Objects.equals(dataComanda, other.dataComanda)
 				&& Objects.equals(descricaoProduto, other.descricaoProduto) && Objects.equals(gravacao, other.gravacao)
-				&& Objects.equals(horaComanda, other.horaComanda) && idComanda == other.idComanda
-				&& idComandaDetalhe == other.idComandaDetalhe && idFuncionario == other.idFuncionario
-				&& Objects.equals(idProduto, other.idProduto)
+				&& Objects.equals(horaComanda, other.horaComanda) && idBlocoComanda == other.idBlocoComanda
+				&& idComanda == other.idComanda && idComandaDetalhe == other.idComandaDetalhe
+				&& idFuncionario == other.idFuncionario && Objects.equals(idProduto, other.idProduto)
 				&& Double.doubleToLongBits(qtdeComandaDetalhe) == Double.doubleToLongBits(other.qtdeComandaDetalhe)
 				&& Double.doubleToLongBits(vlrAcrescimoComandaDetalhe) == Double
 						.doubleToLongBits(other.vlrAcrescimoComandaDetalhe)
@@ -434,5 +441,22 @@ public class ComandaDetBeans {
 						.doubleToLongBits(other.vlrTotalComandaDetalhe)
 				&& Double.doubleToLongBits(vlrUnitarioComandaDetalhe) == Double
 						.doubleToLongBits(other.vlrUnitarioComandaDetalhe);
+	}
+
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
+	@Override
+	public String toString() {
+		return "ComandaDetBeans [idComandaDetalhe=" + idComandaDetalhe + ", idComanda=" + idComanda
+				+ ", idBlocoComanda=" + idBlocoComanda + ", idProduto=" + idProduto + ", descricaoProduto="
+				+ descricaoProduto + ", qtdeComandaDetalhe=" + qtdeComandaDetalhe + ", vlrUnitarioComandaDetalhe="
+				+ vlrUnitarioComandaDetalhe + ", vlrTotalComandaDetalhe=" + vlrTotalComandaDetalhe
+				+ ", vlrDescontoComandaDetalhe=" + vlrDescontoComandaDetalhe + ", vlrAcrescimoComandaDetalhe="
+				+ vlrAcrescimoComandaDetalhe + ", vlrTotFinalComandaDetalhe=" + vlrTotFinalComandaDetalhe
+				+ ", dataComanda=" + dataComanda + ", horaComanda=" + horaComanda + ", idFuncionario=" + idFuncionario
+				+ ", gravacao=" + gravacao + ", comandaDetalheItem=" + comandaDetalheItem + "]";
 	}
 }

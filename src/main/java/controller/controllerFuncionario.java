@@ -16,7 +16,7 @@ import model.dao.ProdutoDao;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import impressions.printComandInvoiceOrder;
+import impressions.printComandaInvoiceOrder;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -28,7 +28,7 @@ import impressions.printComandInvoiceOrder;
 public class controllerFuncionario extends HttpServlet {
 	
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6300049712855924535L;
 	
 	/** The fun. */
 	private FuncionarioBeans fun = new FuncionarioBeans();
@@ -49,7 +49,7 @@ public class controllerFuncionario extends HttpServlet {
 	private ComandaDao daoComanda = new ComandaDao();
 	
 	/** The comand invoice order. */
-	private printComandInvoiceOrder comandInvoiceOrder = new printComandInvoiceOrder();
+	private printComandaInvoiceOrder comandInvoiceOrder = new printComandaInvoiceOrder();
 	
 	/** The action. */
 	private String action;
@@ -161,6 +161,7 @@ public class controllerFuncionario extends HttpServlet {
 	 */
 	protected void buscarStatusComanda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		daoComanda.buscarComandaStatus(com, request.getParameter("codComanda").toString(), request.getParameter("nomeComanda").toString(), fun.getCodFuncionario());
+		comandInvoiceOrder.generateOdt(com.getIdBlocoComanda());
 		request.setAttribute("status-comanda", com.getStatusComanda().trim());
 		System.out.println("Id comanda: "+com.getIdComanda());
 		System.out.println("Status retornado: "+com.getStatusComanda().trim());
@@ -241,7 +242,7 @@ public class controllerFuncionario extends HttpServlet {
 	protected void printComandInvoiceOrder(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<ComandaDetBeans> comandasDetalhes = new ArrayList<>();
 		comandasDetalhes = daoComanda.buscarTodasComandasDet(com);
-		comandInvoiceOrder.printInvoice(comandasDetalhes);
+		comandInvoiceOrder.insertAndOpen(comandasDetalhes);
 		ArrayList<ProdutoBeans> produtos = new ArrayList<>();
 		produtos = daoProduto.listarProdutos();
 		request.getSession().setAttribute("mostrar-produtos", produtos);
