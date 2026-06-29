@@ -4,13 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import org.eclipse.jdt.internal.compiler.ast.ArrayAllocationExpression;
-
 import JDBC.JdbcConnection;
-import model.beans.ComandaBeans;
-import model.beans.ComandaDetBeans;
-import model.beans.FuncionarioBeans;
-import model.beans.ProdutoBeans;
+import model.beans.Comandas.ComandaBeans;
+import model.beans.Comandas.ComandaDetBeans;
+import model.beans.Funcionario.FuncionarioBeans;
 
 // TODO: Auto-generated Javadoc
 /**

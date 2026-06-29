@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import JDBC.JdbcConnection;
-import model.beans.ProdutoBeans;
+import model.beans.Produto.ProdutoBeans;
 
 // TODO: Auto-generated Javadoc
 /**

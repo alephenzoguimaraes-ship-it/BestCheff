@@ -1,4 +1,4 @@
-package model.beans;
+package model.beans.Comandas;
 
 import java.sql.Date;
 import java.sql.Time;

@@ -1,4 +1,4 @@
-package model.beans;
+package model.beans.Produto;
 
 import java.util.Objects;
 

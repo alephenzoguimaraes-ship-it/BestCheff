@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package model.beans;
+package model.beans.Funcionario;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

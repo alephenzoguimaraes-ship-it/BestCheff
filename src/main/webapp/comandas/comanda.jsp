@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="model.beans.ProdutoBeans"%>
+<%@ page import="model.beans.Produto.ProdutoBeans"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.text.DecimalFormat"%>
 <%@ page import="java.text.DecimalFormatSymbols"%>

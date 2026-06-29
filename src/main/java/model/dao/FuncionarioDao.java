@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import JDBC.JdbcConnection;
-import model.beans.FuncionarioBeans;
+import model.beans.Funcionario.FuncionarioBeans;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -1,9 +1,12 @@
 package impressions;
 
 import java.awt.Desktop;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -13,7 +16,8 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import model.beans.ComandaDetBeans;
+import model.beans.Comandas.ComandaDetBeans;
+import model.beans.Emitente.EmitenteBeans;
 
 public class printComandaInvoiceOrder {
 
@@ -21,7 +25,6 @@ public class printComandaInvoiceOrder {
 	private static final NumberFormat BRL = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 	private static final DecimalFormat QTY = new DecimalFormat("#.##");
 	private static final SimpleDateFormat FMT_DATA = new SimpleDateFormat("dd/MM/yyyy");
-	private static final SimpleDateFormat FMT_HORA = new SimpleDateFormat("HH:mm");
 
 	public void generateOdt(int idBlocoComanda) throws IOException {
 		File pasta = new File(System.getProperty("java.io.tmpdir"), "bestcheff");
@@ -37,14 +40,14 @@ public class printComandaInvoiceOrder {
 		}
 	}
 
-	public void insertAndOpen(ArrayList<ComandaDetBeans> itens) throws IOException {
+	public void insertAndOpen(ArrayList<ComandaDetBeans> itens, EmitenteBeans emitente) throws IOException {
 		File temp = File.createTempFile("comanda_tmp", ".odt", fileOdt.getParentFile());
 
 		try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(temp))) {
 			writeMimetype(zip);
 			writeEntry(zip, "META-INF/manifest.xml", manifest());
 			writeEntry(zip, "styles.xml", styles());
-			writeEntry(zip, "content.xml", contentComDados(itens));
+			writeEntry(zip, "content.xml", contentComDados(itens, emitente));
 		}
 
 		Files.move(temp.toPath(), fileOdt.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -107,14 +110,13 @@ public class printComandaInvoiceOrder {
 				+ "  xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\""
 				+ "  xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\""
 				+ "  xmlns:style=\"urn:oasis:names:tc:opendocument:xmlns:style:1.0\""
-				+ "  xmlns:fo=\"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\""
-				+ "  xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+				+ "  xmlns:fo=\"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\">"
 				+ "<office:automatic-styles/>"
 				+ "<office:body><office:text/></office:body>"
 				+ "</office:document-content>";
 	}
 
-	private String contentComDados(ArrayList<ComandaDetBeans> itens) {
+	private String contentComDados(ArrayList<ComandaDetBeans> itens, EmitenteBeans emitente) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -122,23 +124,15 @@ public class printComandaInvoiceOrder {
 		sb.append("  xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\"");
 		sb.append("  xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\"");
 		sb.append("  xmlns:style=\"urn:oasis:names:tc:opendocument:xmlns:style:1.0\"");
-		sb.append("  xmlns:fo=\"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\"");
-		sb.append("  xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">");
+		sb.append("  xmlns:fo=\"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\">");
 
 		sb.append("<office:automatic-styles>");
-		estilo(sb, "Titulo", "paragraph", "Courier New", "11pt", "bold", "center");
-		estilo(sb, "Negrito", "paragraph", "Courier New", "10pt", "bold", "start");
 		estilo(sb, "Normal", "paragraph", "Courier New", "10pt", "normal", "start");
-		estilo(sb, "Total", "paragraph", "Courier New", "11pt", "bold", "start");
-		colStyle(sb, "ColCod", "1.2cm");
-		colStyle(sb, "ColProd", "5.5cm");
-		colStyle(sb, "ColNum", "1.2cm");
-		colStyle(sb, "ColVlr", "2.3cm");
 		sb.append("</office:automatic-styles>");
 
 		sb.append("<office:body>");
 		sb.append("<office:text>");
-		insertInformationOdt(sb, itens);
+		insertInformationOdt(sb, itens, emitente);
 		sb.append("</office:text>");
 		sb.append("</office:body>");
 		sb.append("</office:document-content>");
@@ -146,47 +140,66 @@ public class printComandaInvoiceOrder {
 		return sb.toString();
 	}
 
-	private void insertInformationOdt(StringBuilder sb, ArrayList<ComandaDetBeans> itens) {
+	private void insertInformationOdt(StringBuilder sb, ArrayList<ComandaDetBeans> itens, EmitenteBeans emitente) {
 		ComandaDetBeans primeiro = itens.get(0);
 
-		p(sb, "====  COMANDA EM VERIFICACAO  ====", "Titulo");
-		p(sb, "Comanda N.: " + primeiro.getIdBlocoComanda()+"  Cod. Func.: "+primeiro.getIdFuncionario()+"  Nome Func.: "+primeiro.getNomeFuncionario(), "Negrito");
-
-		if (primeiro.getDataComanda() != null) {
-			p(sb, "Data: " + FMT_DATA.format(primeiro.getDataComanda()) + "                      Hora: "
-					+ FMT_HORA.format(primeiro.getHoraComanda()), "Normal");
-		}
-
-		p(sb, "-----------------------------------------------------------", "Normal");
-
-		sb.append("<table:table table:name=\"Itens\">");
-		sb.append("<table:table-column table:style-name=\"ColCod\"/>");
-		sb.append("<table:table-column table:style-name=\"ColProd\"/>");
-		sb.append("<table:table-column table:style-name=\"ColNum\"/>");
-		sb.append("<table:table-column table:style-name=\"ColVlr\"/>");
-		sb.append("<table:table-column table:style-name=\"ColVlr\"/>");
-
-		tabelaLinha(sb, "COD.", "PRODUTO", "QTD", "UNIT.", "TOTAL", "Negrito");
+		p(sb, padRight("==============DADOS DA EMPRESA=============", 49) + "RAZAO.: " + emitente.getNome(), "Normal");
+		p(sb, padRight("CNPJ.: " + emitente.getCnpj(), 49) + "IE.: " + emitente.getIe(), "Normal");
+		p(sb, padRight("Endereco.: " + emitente.getEndereco(), 49) + "Numero.: " + emitente.getNumero(), "Normal");
+		p(sb, padRight("Bairro.: " + emitente.getBairro(), 49) + "Telefone.: " + emitente.getTelefone(), "Normal");
+		
+		p(sb, padRight("==============DADOS DA COMANDA=============", 49) + "COMANDA .: " + primeiro.getIdBlocoComanda(), "Normal");
+		String dtCmd = primeiro.getDataComanda() != null ? FMT_DATA.format(primeiro.getDataComanda()) : "";
+		p(sb, padRight("Comanda N.: " + primeiro.getIdBlocoComanda(), 49) + "Data Comanda.: " + dtCmd, "Normal");
+		
+		p(sb, "============== ITENS ======================================================", "Normal");
+		p(sb, "Qtde  Valor                                        Total", "Normal");
+		p(sb, "      Codigo      Produto", "Normal");
+		p(sb, "---------------------------------------------------------------------------", "Normal");
 
 		double totalGeral = 0.0;
 		for (ComandaDetBeans item : itens) {
 			String cod = item.getIdProduto() != null ? item.getIdProduto() : "---";
 			String nome = item.getDescricaoProduto() != null ? item.getDescricaoProduto() : "---";
+			String qty = QTY.format(item.getQtdeComandaDetalhe());
+			String vlrU = BRL.format(item.getVlrUnitarioComandaDetalhe());
+			String vlrT = BRL.format(item.getVlrTotFinalComandaDetalhe());
 
-			tabelaLinha(sb, cod, nome,
-					QTY.format(item.getQtdeComandaDetalhe()),
-					BRL.format(item.getVlrUnitarioComandaDetalhe()),
-					BRL.format(item.getVlrTotFinalComandaDetalhe()),
-					"Normal");
+			String strLinha1 = "  " + padRight(cod, 10) + padRight(nome, 38) + padLeft(qty + " X  " + vlrU, 20);
+			
+			p(sb, strLinha1, "Normal");
+			p(sb, "= " + vlrT, "Normal");
 
 			totalGeral += item.getVlrTotFinalComandaDetalhe();
 		}
 
-		sb.append("</table:table>");
-		p(sb, "-----------------------------------------------------------", "Normal");
-		p(sb, "TOTAL: " + BRL.format(totalGeral), "Total");
-		p(sb, " ", "Normal");
-		p(sb, "** CONTA EM ABERTO **", "Titulo");
+		p(sb, "---------------------------------------------------------------------------", "Normal");
+		
+		String func = primeiro.getNomeFuncionario() != null ? primeiro.getNomeFuncionario() : "";
+		p(sb, "  Funcionario .: " + padRight(func, 30) + "CONSUMIDOR", "Normal");
+		p(sb, "  Total.: COMANDA EM ABERTO. " + BRL.format(totalGeral), "Normal");
+		p(sb, "  Obs .:", "Normal");
+		
+		String cidade = emitente.getCidade() != null ? emitente.getCidade().toUpperCase() : "";
+		String dataExt = primeiro.getDataComanda() != null ? new SimpleDateFormat("EEEE, dd 'de' MMMM 'de' yyyy", new Locale("pt", "BR")).format(primeiro.getDataComanda()) : "";
+		p(sb, "  " + cidade + ", " + dataExt, "Normal");
+	}
+
+	private String padRight(String s, int n) {
+		if (s == null) s = "";
+		if (s.length() > n) return s.substring(0, n);
+		StringBuilder sb = new StringBuilder(s);
+		while (sb.length() < n) sb.append(" ");
+		return sb.toString();
+	}
+
+	private String padLeft(String s, int n) {
+		if (s == null) s = "";
+		if (s.length() > n) return s.substring(0, n);
+		StringBuilder sb = new StringBuilder();
+		while (sb.length() < n - s.length()) sb.append(" ");
+		sb.append(s);
+		return sb.toString();
 	}
 
 	private String manifest() {
@@ -221,34 +234,31 @@ public class printComandaInvoiceOrder {
 		sb.append("</style:style>");
 	}
 
-	private void colStyle(StringBuilder sb, String nome, String largura) {
-		sb.append("<style:style style:name=\"").append(nome).append("\" style:family=\"table-column\">")
-				.append("<style:table-column-properties style:column-width=\"").append(largura).append("\"/>")
-				.append("</style:style>");
-	}
-
-	private void tabelaLinha(StringBuilder sb, String c1, String c2, String c3, String c4, String c5, String style) {
-		sb.append("<table:table-row>");
-		celula(sb, c1, style);
-		celula(sb, c2, style);
-		celula(sb, c3, style);
-		celula(sb, c4, style);
-		celula(sb, c5, style);
-		sb.append("</table:table-row>");
-	}
-
-	private void celula(StringBuilder sb, String texto, String style) {
-		sb.append("<table:table-cell>")
-				.append("<text:p text:style-name=\"").append(style).append("\">")
-				.append(escapeXml(texto))
-				.append("</text:p>")
-				.append("</table:table-cell>");
-	}
-
 	private void p(StringBuilder sb, String texto, String style) {
-		sb.append("<text:p text:style-name=\"").append(style).append("\">")
-				.append(escapeXml(texto))
-				.append("</text:p>");
+		sb.append("<text:p text:style-name=\"").append(style).append("\">");
+		String escaped = escapeXml(texto);
+		StringBuilder lineContent = new StringBuilder();
+		int spaces = 0;
+		for (char c : escaped.toCharArray()) {
+			if (c == ' ') {
+				spaces++;
+			} else {
+				if (spaces == 1) {
+					lineContent.append(" ");
+				} else if (spaces > 1) {
+					lineContent.append("<text:s text:c=\"").append(spaces).append("\"/>");
+				}
+				spaces = 0;
+				lineContent.append(c);
+			}
+		}
+		if (spaces == 1) {
+			lineContent.append(" ");
+		} else if (spaces > 1) {
+			lineContent.append("<text:s text:c=\"").append(spaces).append("\"/>");
+		}
+		sb.append(lineContent.toString());
+		sb.append("</text:p>");
 	}
 
 	private static String escapeXml(String s) {

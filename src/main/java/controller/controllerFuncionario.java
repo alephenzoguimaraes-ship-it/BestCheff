@@ -1,22 +1,24 @@
 package controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import impressions.printComandaInvoiceOrder;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.beans.ComandaBeans;
-import model.beans.ComandaDetBeans;
-import model.beans.FuncionarioBeans;
-import model.beans.ProdutoBeans;
+import model.beans.Comandas.ComandaBeans;
+import model.beans.Comandas.ComandaDetBeans;
+import model.beans.Emitente.EmitenteBeans;
+import model.beans.Funcionario.FuncionarioBeans;
+import model.beans.Produto.ProdutoBeans;
 import model.dao.ComandaDao;
+import model.dao.EmitenteDao;
 import model.dao.FuncionarioDao;
 import model.dao.ProdutoDao;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import impressions.printComandaInvoiceOrder;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -39,6 +41,9 @@ public class controllerFuncionario extends HttpServlet {
 	/** The c det. */
 	private ComandaDetBeans cDet = new ComandaDetBeans();
 	
+	/** The emitente. */
+	private EmitenteBeans emitente = new EmitenteBeans();
+	
 	/** The dao funcionario. */
 	private FuncionarioDao daoFuncionario = new FuncionarioDao();
 	
@@ -47,6 +52,9 @@ public class controllerFuncionario extends HttpServlet {
 	
 	/** The dao comanda. */
 	private ComandaDao daoComanda = new ComandaDao();
+	
+	/** The . */
+	private EmitenteDao emitenteDao = new EmitenteDao();
 	
 	/** The comand invoice order. */
 	private printComandaInvoiceOrder comandInvoiceOrder = new printComandaInvoiceOrder();
@@ -149,6 +157,7 @@ public class controllerFuncionario extends HttpServlet {
 			
 			response.sendRedirect("comandas/comanda.jsp");
 		}
+		emitenteDao.getEmitente(emitente);
 	}
 	
 	/**
@@ -242,7 +251,7 @@ public class controllerFuncionario extends HttpServlet {
 	protected void printComandInvoiceOrder(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<ComandaDetBeans> comandasDetalhes = new ArrayList<>();
 		comandasDetalhes = daoComanda.buscarTodasComandasDet(com);
-		comandInvoiceOrder.insertAndOpen(comandasDetalhes);
+		comandInvoiceOrder.insertAndOpen(comandasDetalhes, emitente);
 		ArrayList<ProdutoBeans> produtos = new ArrayList<>();
 		produtos = daoProduto.listarProdutos();
 		request.getSession().setAttribute("mostrar-produtos", produtos);
