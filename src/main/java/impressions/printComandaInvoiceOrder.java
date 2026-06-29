@@ -150,14 +150,14 @@ public class printComandaInvoiceOrder {
 		ComandaDetBeans primeiro = itens.get(0);
 
 		p(sb, "====  COMANDA EM VERIFICACAO  ====", "Titulo");
-		p(sb, "Comanda N.: " + primeiro.getIdBlocoComanda(), "Negrito");
+		p(sb, "Comanda N.: " + primeiro.getIdBlocoComanda()+"  Cod. Func.: "+primeiro.getIdFuncionario()+"  Nome Func.: "+primeiro.getNomeFuncionario(), "Negrito");
 
 		if (primeiro.getDataComanda() != null) {
-			p(sb, "Data: " + FMT_DATA.format(primeiro.getDataComanda()) + "   Hora: "
+			p(sb, "Data: " + FMT_DATA.format(primeiro.getDataComanda()) + "                      Hora: "
 					+ FMT_HORA.format(primeiro.getHoraComanda()), "Normal");
 		}
 
-		p(sb, "-------------------------------------------", "Normal");
+		p(sb, "-----------------------------------------------------------", "Normal");
 
 		sb.append("<table:table table:name=\"Itens\">");
 		sb.append("<table:table-column table:style-name=\"ColCod\"/>");
@@ -183,7 +183,7 @@ public class printComandaInvoiceOrder {
 		}
 
 		sb.append("</table:table>");
-		p(sb, "-------------------------------------------", "Normal");
+		p(sb, "-----------------------------------------------------------", "Normal");
 		p(sb, "TOTAL: " + BRL.format(totalGeral), "Total");
 		p(sb, " ", "Normal");
 		p(sb, "** CONTA EM ABERTO **", "Titulo");

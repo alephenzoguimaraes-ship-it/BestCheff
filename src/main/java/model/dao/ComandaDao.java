@@ -145,11 +145,12 @@ public class ComandaDao {
 				+ "r.QTDE_COMANDA_DETALHE, r.VLR_UNITARIO_COMANDA_DETALHE,\n"
 				+ "r.VLR_TOTAL_COMANDA_DETALHE, r.VLR_DESCONTO_COMANDA_DETALHE,\n"
 				+ "r.VLR_ACRESCIMO_COMANDA_DETALHE, r.VLR_TOT_FINAL_COMANDA_DETALHE,\n"
-				+ "r.DATA_COMANDA, r.HORA_COMANDA, r.RF_ID_FUNCIONARIO, r.GRAVACAO,\n"
+				+ "r.DATA_COMANDA, r.HORA_COMANDA, r.RF_ID_FUNCIONARIO, f.NOME_FUNCIONARIO, r.GRAVACAO,\n"
 				+ "r.COMANDA_DETALHE_ITEM\n"
 				+ "FROM COMANDA_DETALHE r\n"
 				+ "inner join PRODUTO p ON r.RF_ID_PRODUTO = p.COD_PRODUTO\n"
 				+ "inner join COMANDA c ON r.ID_COMANDA_DETALHE = c.ID_COMANDA\n"
+				+ "inner join FUNCIONARIO f on r.RF_ID_FUNCIONARIO = f.COD_FUNCIONARIO \n"
 				+ "WHERE r.ID_COMANDA_DETALHE = ? and r.RF_ID_COMANDA = ?\n"
 				+ "order by r.ID_COMANDA_DETALHE desc";
 		ArrayList<ComandaDetBeans> comandasDetalhe = new ArrayList<>();
@@ -162,7 +163,7 @@ public class ComandaDao {
 				comandasDetalhe.add(new ComandaDetBeans(rs.getLong("ID_COMANDA_DETALHE"), rs.getLong("RF_ID_COMANDA"), rs.getInt("RF_ID_BLOCO_COMANDA"), rs.getString("RF_ID_PRODUTO"), rs.getString("UPPER"), rs.getDouble("QTDE_COMANDA_DETALHE"),
 						rs.getDouble("VLR_UNITARIO_COMANDA_DETALHE"), rs.getDouble("VLR_TOTAL_COMANDA_DETALHE"), rs.getDouble("VLR_DESCONTO_COMANDA_DETALHE"),
 						rs.getDouble("VLR_ACRESCIMO_COMANDA_DETALHE"), rs.getDouble("VLR_TOT_FINAL_COMANDA_DETALHE"), rs.getDate("DATA_COMANDA"), rs.getTime("HORA_COMANDA"),
-						rs.getInt("RF_ID_FUNCIONARIO"), rs.getTimestamp("GRAVACAO"), rs.getInt("COMANDA_DETALHE_ITEM")));
+						rs.getInt("RF_ID_FUNCIONARIO"), rs.getString("NOME_FUNCIONARIO"), rs.getTimestamp("GRAVACAO"), rs.getInt("COMANDA_DETALHE_ITEM")));
 			}
 			return comandasDetalhe;
 		} catch (Exception e) {

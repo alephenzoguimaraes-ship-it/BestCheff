@@ -53,6 +53,9 @@ public class ComandaDetBeans {
 	/** The id funcionario. */
 	private int idFuncionario;
 	
+	/** The nome funcionario. */
+	private String nomeFuncionario;
+	
 	/** The gravacao. */
 	private java.sql.Timestamp gravacao;
 	
@@ -76,14 +79,15 @@ public class ComandaDetBeans {
 	 * @param dataComanda the data comanda
 	 * @param horaComanda the hora comanda
 	 * @param idFuncionario the id funcionario
+	 * @param nomeFuncionario the nome funcionario
 	 * @param gravacao the gravacao
 	 * @param comandaDetalheItem the comanda detalhe item
 	 */
 	public ComandaDetBeans(long idComandaDetalhe, long idComanda, int idBlocoComanda, String idProduto,
 			String descricaoProduto, double qtdeComandaDetalhe, double vlrUnitarioComandaDetalhe,
 			double vlrTotalComandaDetalhe, double vlrDescontoComandaDetalhe, double vlrAcrescimoComandaDetalhe,
-			double vlrTotFinalComandaDetalhe, Date dataComanda, Time horaComanda, int idFuncionario, Timestamp gravacao,
-			int comandaDetalheItem) {
+			double vlrTotFinalComandaDetalhe, Date dataComanda, Time horaComanda, int idFuncionario,
+			String nomeFuncionario, Timestamp gravacao, int comandaDetalheItem) {
 		this.idComandaDetalhe = idComandaDetalhe;
 		this.idComanda = idComanda;
 		this.idBlocoComanda = idBlocoComanda;
@@ -98,6 +102,7 @@ public class ComandaDetBeans {
 		this.dataComanda = dataComanda;
 		this.horaComanda = horaComanda;
 		this.idFuncionario = idFuncionario;
+		this.nomeFuncionario = nomeFuncionario;
 		this.gravacao = gravacao;
 		this.comandaDetalheItem = comandaDetalheItem;
 	}
@@ -362,6 +367,24 @@ public class ComandaDetBeans {
 	}
 
 	/**
+	 * Gets the nome funcionario.
+	 *
+	 * @return the nome funcionario
+	 */
+	public String getNomeFuncionario() {
+		return nomeFuncionario;
+	}
+
+	/**
+	 * Sets the nome funcionario.
+	 *
+	 * @param nomeFuncionario the new nome funcionario
+	 */
+	public void setNomeFuncionario(String nomeFuncionario) {
+		this.nomeFuncionario = nomeFuncionario;
+	}
+
+	/**
 	 * Gets the gravacao.
 	 *
 	 * @return the gravacao
@@ -405,9 +428,9 @@ public class ComandaDetBeans {
 	@Override
 	public int hashCode() {
 		return Objects.hash(comandaDetalheItem, dataComanda, descricaoProduto, gravacao, horaComanda, idBlocoComanda,
-				idComanda, idComandaDetalhe, idFuncionario, idProduto, qtdeComandaDetalhe, vlrAcrescimoComandaDetalhe,
-				vlrDescontoComandaDetalhe, vlrTotFinalComandaDetalhe, vlrTotalComandaDetalhe,
-				vlrUnitarioComandaDetalhe);
+				idComanda, idComandaDetalhe, idFuncionario, idProduto, nomeFuncionario, qtdeComandaDetalhe,
+				vlrAcrescimoComandaDetalhe, vlrDescontoComandaDetalhe, vlrTotFinalComandaDetalhe,
+				vlrTotalComandaDetalhe, vlrUnitarioComandaDetalhe);
 	}
 
 	/**
@@ -430,6 +453,7 @@ public class ComandaDetBeans {
 				&& Objects.equals(horaComanda, other.horaComanda) && idBlocoComanda == other.idBlocoComanda
 				&& idComanda == other.idComanda && idComandaDetalhe == other.idComandaDetalhe
 				&& idFuncionario == other.idFuncionario && Objects.equals(idProduto, other.idProduto)
+				&& Objects.equals(nomeFuncionario, other.nomeFuncionario)
 				&& Double.doubleToLongBits(qtdeComandaDetalhe) == Double.doubleToLongBits(other.qtdeComandaDetalhe)
 				&& Double.doubleToLongBits(vlrAcrescimoComandaDetalhe) == Double
 						.doubleToLongBits(other.vlrAcrescimoComandaDetalhe)
@@ -457,6 +481,7 @@ public class ComandaDetBeans {
 				+ ", vlrDescontoComandaDetalhe=" + vlrDescontoComandaDetalhe + ", vlrAcrescimoComandaDetalhe="
 				+ vlrAcrescimoComandaDetalhe + ", vlrTotFinalComandaDetalhe=" + vlrTotFinalComandaDetalhe
 				+ ", dataComanda=" + dataComanda + ", horaComanda=" + horaComanda + ", idFuncionario=" + idFuncionario
-				+ ", gravacao=" + gravacao + ", comandaDetalheItem=" + comandaDetalheItem + "]";
+				+ ", nomeFuncionario=" + nomeFuncionario + ", gravacao=" + gravacao + ", comandaDetalheItem="
+				+ comandaDetalheItem + "]";
 	}
 }
