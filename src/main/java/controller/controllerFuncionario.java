@@ -15,10 +15,10 @@ import model.beans.Comandas.ComandaDetBeans;
 import model.beans.Emitente.EmitenteBeans;
 import model.beans.Funcionario.FuncionarioBeans;
 import model.beans.Produto.ProdutoBeans;
-import model.dao.ComandaDao;
-import model.dao.EmitenteDao;
-import model.dao.FuncionarioDao;
-import model.dao.ProdutoDao;
+import model.dao.Comanda.ComandaDao;
+import model.dao.Emitente.EmitenteDao;
+import model.dao.Funcionario.FuncionarioDao;
+import model.dao.Produto.ProdutoDao;
 
 // TODO: Auto-generated Javadoc
 /**

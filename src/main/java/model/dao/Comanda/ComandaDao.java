@@ -1,4 +1,4 @@
-package model.dao;
+package model.dao.Comanda;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

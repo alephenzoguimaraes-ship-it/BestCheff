@@ -1,4 +1,4 @@
-package model.dao;
+package model.dao.Emitente;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

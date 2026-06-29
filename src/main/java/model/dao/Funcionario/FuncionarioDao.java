@@ -1,4 +1,4 @@
-package model.dao;
+package model.dao.Funcionario;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
