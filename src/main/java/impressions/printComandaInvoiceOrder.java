@@ -19,13 +19,31 @@ import java.util.zip.ZipOutputStream;
 import model.beans.Comandas.ComandaDetBeans;
 import model.beans.Emitente.EmitenteBeans;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class printComandaInvoiceOrder.
+ */
 public class printComandaInvoiceOrder {
 
+	/** The file odt. */
 	private File fileOdt;
+	
+	/** The Constant BRL. */
+	@SuppressWarnings("deprecation")
 	private static final NumberFormat BRL = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+	
+	/** The Constant QTY. */
 	private static final DecimalFormat QTY = new DecimalFormat("#.##");
+	
+	/** The Constant FMT_DATA. */
 	private static final SimpleDateFormat FMT_DATA = new SimpleDateFormat("dd/MM/yyyy");
 
+	/**
+	 * Generate odt.
+	 *
+	 * @param idBlocoComanda the id bloco comanda
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void generateOdt(int idBlocoComanda) throws IOException {
 		File pasta = new File(System.getProperty("java.io.tmpdir"), "bestcheff");
 		pasta.mkdirs();
@@ -40,6 +58,13 @@ public class printComandaInvoiceOrder {
 		}
 	}
 
+	/**
+	 * Insert and open.
+	 *
+	 * @param itens the itens
+	 * @param emitente the emitente
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void insertAndOpen(ArrayList<ComandaDetBeans> itens, EmitenteBeans emitente) throws IOException {
 		File temp = File.createTempFile("comanda_tmp", ".odt", fileOdt.getParentFile());
 
@@ -56,6 +81,11 @@ public class printComandaInvoiceOrder {
 		agendarDelete(fileOdt);
 	}
 
+	/**
+	 * Agendar delete.
+	 *
+	 * @param arquivo the arquivo
+	 */
 	private void agendarDelete(File arquivo) {
 		Thread t = new Thread(() -> {
 			while (arquivo.exists()) {
@@ -75,6 +105,11 @@ public class printComandaInvoiceOrder {
 		t.start();
 	}
 
+	/**
+	 * Open file.
+	 *
+	 * @param file the file
+	 */
 	public void openFile(File file) {
 		try {
 			if (Desktop.isDesktopSupported())
@@ -84,6 +119,12 @@ public class printComandaInvoiceOrder {
 		}
 	}
 
+	/**
+	 * Write mimetype.
+	 *
+	 * @param zip the zip
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void writeMimetype(ZipOutputStream zip) throws IOException {
 		byte[] mtype = "application/vnd.oasis.opendocument.text".getBytes(StandardCharsets.UTF_8);
 		ZipEntry me = new ZipEntry("mimetype");
@@ -98,12 +139,25 @@ public class printComandaInvoiceOrder {
 		zip.closeEntry();
 	}
 
+	/**
+	 * Write entry.
+	 *
+	 * @param zip the zip
+	 * @param nome the nome
+	 * @param conteudo the conteudo
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void writeEntry(ZipOutputStream zip, String nome, String conteudo) throws IOException {
 		zip.putNextEntry(new ZipEntry(nome));
 		zip.write(conteudo.getBytes(StandardCharsets.UTF_8));
 		zip.closeEntry();
 	}
 
+	/**
+	 * Content vazio.
+	 *
+	 * @return the string
+	 */
 	private String contentVazio() {
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 				+ "<office:document-content"
@@ -116,6 +170,13 @@ public class printComandaInvoiceOrder {
 				+ "</office:document-content>";
 	}
 
+	/**
+	 * Content com dados.
+	 *
+	 * @param itens the itens
+	 * @param emitente the emitente
+	 * @return the string
+	 */
 	private String contentComDados(ArrayList<ComandaDetBeans> itens, EmitenteBeans emitente) {
 		StringBuilder sb = new StringBuilder();
 
@@ -140,6 +201,13 @@ public class printComandaInvoiceOrder {
 		return sb.toString();
 	}
 
+	/**
+	 * Insert information odt.
+	 *
+	 * @param sb the sb
+	 * @param itens the itens
+	 * @param emitente the emitente
+	 */
 	private void insertInformationOdt(StringBuilder sb, ArrayList<ComandaDetBeans> itens, EmitenteBeans emitente) {
 		ComandaDetBeans primeiro = itens.get(0);
 
@@ -181,10 +249,18 @@ public class printComandaInvoiceOrder {
 		p(sb, "  Obs .:", "Normal");
 		
 		String cidade = emitente.getCidade() != null ? emitente.getCidade().toUpperCase() : "";
+		@SuppressWarnings("deprecation")
 		String dataExt = primeiro.getDataComanda() != null ? new SimpleDateFormat("EEEE, dd 'de' MMMM 'de' yyyy", new Locale("pt", "BR")).format(primeiro.getDataComanda()) : "";
 		p(sb, "  " + cidade + ", " + dataExt, "Normal");
 	}
 
+	/**
+	 * Pad right.
+	 *
+	 * @param s the s
+	 * @param n the n
+	 * @return the string
+	 */
 	private String padRight(String s, int n) {
 		if (s == null) s = "";
 		if (s.length() > n) return s.substring(0, n);
@@ -193,6 +269,13 @@ public class printComandaInvoiceOrder {
 		return sb.toString();
 	}
 
+	/**
+	 * Pad left.
+	 *
+	 * @param s the s
+	 * @param n the n
+	 * @return the string
+	 */
 	private String padLeft(String s, int n) {
 		if (s == null) s = "";
 		if (s.length() > n) return s.substring(0, n);
@@ -202,6 +285,11 @@ public class printComandaInvoiceOrder {
 		return sb.toString();
 	}
 
+	/**
+	 * Manifest.
+	 *
+	 * @return the string
+	 */
 	private String manifest() {
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 				+ "<manifest:manifest xmlns:manifest=\"urn:oasis:names:tc:opendocument:xmlns:manifest:1.0\">"
@@ -211,6 +299,11 @@ public class printComandaInvoiceOrder {
 				+ "</manifest:manifest>";
 	}
 
+	/**
+	 * Styles.
+	 *
+	 * @return the string
+	 */
 	private String styles() {
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 				+ "<office:document-styles"
@@ -225,6 +318,17 @@ public class printComandaInvoiceOrder {
 				+ "</office:document-styles>";
 	}
 
+	/**
+	 * Estilo.
+	 *
+	 * @param sb the sb
+	 * @param nome the nome
+	 * @param family the family
+	 * @param font the font
+	 * @param size the size
+	 * @param weight the weight
+	 * @param align the align
+	 */
 	private void estilo(StringBuilder sb, String nome, String family, String font, String size, String weight, String align) {
 		sb.append("<style:style style:name=\"").append(nome).append("\" style:family=\"").append(family).append("\">");
 		sb.append("<style:paragraph-properties fo:text-align=\"").append(align).append("\"/>");
@@ -234,6 +338,13 @@ public class printComandaInvoiceOrder {
 		sb.append("</style:style>");
 	}
 
+	/**
+	 * P.
+	 *
+	 * @param sb the sb
+	 * @param texto the texto
+	 * @param style the style
+	 */
 	private void p(StringBuilder sb, String texto, String style) {
 		sb.append("<text:p text:style-name=\"").append(style).append("\">");
 		String escaped = escapeXml(texto);
@@ -261,6 +372,12 @@ public class printComandaInvoiceOrder {
 		sb.append("</text:p>");
 	}
 
+	/**
+	 * Escape xml.
+	 *
+	 * @param s the s
+	 * @return the string
+	 */
 	private static String escapeXml(String s) {
 		if (s == null)
 			return "";
