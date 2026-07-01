@@ -32,26 +32,67 @@ import model.dao.accessLevelsDB.accessLevelsDao;
 		"/comandas/buscar-status-comanda", "/comandas/abrir-comanda", "/comandas/buscar-prod",
 		"/comandas/insert-comanda", "/comandas/send-invoice" })
 public class controllerFuncionario extends HttpServlet {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -6300049712855924535L;
+	
+	/** The fun. */
 	private FuncionarioBeans fun = new FuncionarioBeans();
+	
+	/** The com. */
 	private ComandaBeans com = new ComandaBeans();
+	
+	/** The c det. */
 	private ComandaDetBeans cDet = new ComandaDetBeans();
+	
+	/** The emitente. */
 	private EmitenteBeans emitente = new EmitenteBeans();
+	
+	/** The dao funcionario. */
 	private FuncionarioDao daoFuncionario = new FuncionarioDao();
+	
+	/** The dao produto. */
 	private ProdutoDao daoProduto = new ProdutoDao();
+	
+	/** The dao comanda. */
 	private ComandaDao daoComanda = new ComandaDao();
+	
+	/** The emitente dao. */
 	private EmitenteDao emitenteDao = new EmitenteDao();
+	
+	/** The comand invoice order. */
 	private printComandaInvoiceOrder comandInvoiceOrder = new printComandaInvoiceOrder();
+	
+	/** The access dao. */
 	private accessLevelsDao accessDao = new accessLevelsDao();
+	
+	/** The action. */
 	private String action;
+	
+	/** The have access to create. */
 	private String haveAccessToCreate = null;
+	
+	/** The have access to read. */
 	private String haveAccessToRead = null;
+	
+	/** The have access to delete. */
 	private String haveAccessToDelete = null;
 
+	/**
+	 * Instantiates a new controller funcionario.
+	 */
 	public controllerFuncionario() {
 		super();
 	}
 
+	/**
+	 * Do get.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
@@ -59,6 +100,14 @@ public class controllerFuncionario extends HttpServlet {
 		response.setCharacterEncoding("ISO8859_1");
 	}
 
+	/**
+	 * Do post.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("ISO8859_1");
@@ -95,6 +144,14 @@ public class controllerFuncionario extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Logar.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void logar(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ArrayList<accessLevels> levels = new ArrayList<>();
@@ -144,6 +201,14 @@ public class controllerFuncionario extends HttpServlet {
 		emitenteDao.getEmitente(emitente);
 	}
 
+	/**
+	 * Buscar status comanda.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void buscarStatusComanda(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		daoComanda.buscarComandaStatus(com, request.getParameter("codComanda").toString(),
@@ -156,6 +221,14 @@ public class controllerFuncionario extends HttpServlet {
 		rd.forward(request, response);
 	}
 
+	/**
+	 * Abrir comanda.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void abrirComanda(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		if (com.getStatusComanda().equals("Fechado")) {
@@ -173,6 +246,14 @@ public class controllerFuncionario extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Buscar produto.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void buscarProduto(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ArrayList<ProdutoBeans> produtos = new ArrayList<ProdutoBeans>();
@@ -182,6 +263,14 @@ public class controllerFuncionario extends HttpServlet {
 		rd.forward(request, response);
 	}
 
+	/**
+	 * Inserir comanda.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void inserirComanda(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println(
@@ -202,6 +291,14 @@ public class controllerFuncionario extends HttpServlet {
 		response.sendRedirect("./comanda.jsp");
 	}
 
+	/**
+	 * Prints the comand invoice order.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void printComandInvoiceOrder(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ArrayList<ComandaDetBeans> comandasDetalhes = new ArrayList<>();

@@ -7,11 +7,27 @@ import java.util.ArrayList;
 import JDBC.JdbcConnection;
 import accessLevels.accessLevels;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class accessLevelsDao.
+ */
 public class accessLevelsDao {
+	
+	/** The pstm. */
 	private PreparedStatement pstm;
+	
+	/** The rs. */
 	private ResultSet rs;
+	
+	/** The con. */
 	private JdbcConnection con = new JdbcConnection();
 
+	/**
+	 * Gets the the access levels func.
+	 *
+	 * @param codFunc the cod func
+	 * @return the the access levels func
+	 */
 	public ArrayList<accessLevels> getTheAccessLevelsFunc(int codFunc) {
 		ArrayList<accessLevels> accessLevels = new ArrayList<accessLevels>();
 		String getInformation = "SELECT r.COD_FUNC, r.NOME_MODULO, r.CODIGO, r.C, r.R, r.U, r.D\n"
