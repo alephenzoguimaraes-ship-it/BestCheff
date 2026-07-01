@@ -72,9 +72,9 @@
                 <form id="formBuscaComandaStatus" name="form-busca-comanda" action="buscar-status-comanda" method="post">
                     <div class="busca-row">
                         <span class="label-inline">Cód.</span>
-                        <input class="inp inp-sm" type="text" name="codComanda" placeholder="0000">
+                        <input class="inp inp-sm" type="text" name="codComanda" placeholder="0000" value="${param.codComanda}">
                         <span class="label-inline">Nome</span>
-                        <input class="inp" type="text" name="nomeComanda" placeholder="Barra da comanda...">
+                        <input class="inp" type="text" name="nomeComanda" placeholder="Barra da comanda..." value="${param.nomeComanda}">
                         <button type="submit" class="btn-ok">OK</button>
                     </div>
                 </form>

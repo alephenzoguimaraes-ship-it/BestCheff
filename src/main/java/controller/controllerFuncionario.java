@@ -30,7 +30,7 @@ import model.dao.accessLevelsDB.accessLevelsDao;
  */
 @WebServlet(name = "controllerFuncionario", urlPatterns = { "/controllerFuncionario", "/login-funcionario",
 		"/comandas/buscar-status-comanda", "/comandas/abrir-comanda", "/comandas/buscar-prod",
-		"/comandas/insert-comanda", "/comandas/send-invoice" })
+		"/comandas/insert-comanda", "/comandas/send-invoice"})
 public class controllerFuncionario extends HttpServlet {
 	
 	/** The Constant serialVersionUID. */
