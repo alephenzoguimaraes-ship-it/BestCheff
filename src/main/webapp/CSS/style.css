@@ -143,7 +143,6 @@ input:focus {
     stroke: #6366f1;
 }
 
-/* Botão olho - ver/ocultar senha */
 .toggle-senha {
     position: absolute;
     right: 12px;
@@ -175,7 +174,6 @@ input:focus {
     background: rgba(99, 102, 241, 0.1);
 }
 
-/* Input senha com espaço extra à direita pro botão olho */
 #senha {
     padding-right: 42px;
 }
