@@ -128,5 +128,13 @@
 			session.removeAttribute("MSG-ERRO-LOGIN");
 		}
 	%>
+	<script>
+		<%String accessLevels = (String) session.getAttribute("doNotHaveAccess");
+		  if(accessLevels != null) {%>
+			document.getElementById('erro-log-msg').style.color = "#FF0055";
+			document.getElementById('erro-log-msg').innerHTML = "<%= accessLevels %>";
+		<%  session.removeAttribute("doNotHaveAccess");
+		  }%>
+	</script>
 </body>
 </html>

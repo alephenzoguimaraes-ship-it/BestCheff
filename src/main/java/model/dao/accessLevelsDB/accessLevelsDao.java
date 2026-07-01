@@ -14,7 +14,9 @@ public class accessLevelsDao {
 
 	public ArrayList<accessLevels> getTheAccessLevelsFunc(int codFunc) {
 		ArrayList<accessLevels> accessLevels = new ArrayList<accessLevels>();
-		String getInformation = "";
+		String getInformation = "SELECT r.COD_FUNC, r.NOME_MODULO, r.CODIGO, r.C, r.R, r.U, r.D\n"
+				+ "FROM NIVEL_ACESSO r\n"
+				+ "where r.COD_FUNC = ? and r.NOME_MODULO like 'Comandas'";
 		try {
 			pstm = con.conectar().prepareStatement(getInformation);
 			pstm.setInt(1, codFunc);
