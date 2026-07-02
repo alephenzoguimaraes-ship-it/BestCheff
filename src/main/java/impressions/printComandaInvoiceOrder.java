@@ -16,15 +16,27 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintException;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+
 import model.beans.Comandas.ComandaDetBeans;
 import model.beans.Emitente.EmitenteBeans;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class printComandaInvoiceOrder.
+ * @author alephe
+ * The Class was made by AI with help of one programer.
  */
 public class printComandaInvoiceOrder {
-
+	
 	/** The file odt. */
 	private File fileOdt;
 	
@@ -45,7 +57,15 @@ public class printComandaInvoiceOrder {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void generateOdt(int idBlocoComanda) throws IOException {
-		File pasta = new File(System.getProperty("java.io.tmpdir"), "bestcheff");
+		String os = System.getProperty("os.name").toLowerCase();
+		File pasta;
+
+		if (os.contains("win")) {
+			pasta = new File("C:/home/");
+		} else {
+			pasta = new File(System.getProperty("user.dir"));
+		}
+
 		pasta.mkdirs();
 
 		fileOdt = new File(pasta, "comanda" + idBlocoComanda + ".odt");
@@ -82,27 +102,133 @@ public class printComandaInvoiceOrder {
 	}
 
 	/**
+	 * Insert and print.
+	 *
+	 * @param itens the itens
+	 * @param emitente the emitente
+	 * @throws PrintException the print exception
+	 */
+	public void insertAndPrint(ArrayList<ComandaDetBeans> itens, EmitenteBeans emitente) throws PrintException {
+		PrintService padrao = PrintServiceLookup.lookupDefaultPrintService();
+		if (padrao == null)
+			throw new PrintException("Nenhuma impressora padrao configurada.");
+		insertAndPrint(itens, emitente, padrao);
+	}
+
+	/**
+	 * Insert and print.
+	 *
+	 * @param itens the itens
+	 * @param emitente the emitente
+	 * @param printService the print service
+	 * @throws PrintException the print exception
+	 */
+	public void insertAndPrint(ArrayList<ComandaDetBeans> itens, EmitenteBeans emitente, PrintService printService)
+			throws PrintException {
+		String texto = montaTextoRecibo(itens, emitente);
+		byte[] bytes = texto.getBytes(StandardCharsets.UTF_8);
+
+		DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+		Doc doc = new SimpleDoc(bytes, flavor, null);
+		PrintRequestAttributeSet attrs = new HashPrintRequestAttributeSet();
+
+		DocPrintJob job = printService.createPrintJob();
+		job.print(doc, attrs);
+	}
+
+	/**
+	 * Listar impressoras.
+	 *
+	 * @return the prints the service[]
+	 */
+	public PrintService[] listarImpressoras() {
+		return PrintServiceLookup.lookupPrintServices(DocFlavor.BYTE_ARRAY.AUTOSENSE, null);
+	}
+
+	/**
+	 * Buscar impressora.
+	 *
+	 * @param nome the nome
+	 * @return the prints the service
+	 */
+	public PrintService buscarImpressora(String nome) {
+		for (PrintService ps : listarImpressoras()) {
+			if (ps.getName().equalsIgnoreCase(nome))
+				return ps;
+		}
+		return null;
+	}
+
+	/**
+	 * Monta texto recibo.
+	 *
+	 * @param itens the itens
+	 * @param emitente the emitente
+	 * @return the string
+	 */
+	private String montaTextoRecibo(ArrayList<ComandaDetBeans> itens, EmitenteBeans emitente) {
+		StringBuilder sb = new StringBuilder();
+		ComandaDetBeans primeiro = itens.get(0);
+
+		sb.append(padRight("==============DADOS DA EMPRESA=============", 49) + "RAZAO.: " + emitente.getNome())
+				.append("\n");
+		sb.append(padRight("CNPJ.: " + emitente.getCnpj(), 49) + "IE.: " + emitente.getIe()).append("\n");
+		sb.append(padRight("Endereco.: " + emitente.getEndereco(), 49) + "Numero.: " + emitente.getNumero())
+				.append("\n");
+		sb.append(padRight("Bairro.: " + emitente.getBairro(), 49) + "Telefone.: " + emitente.getTelefone())
+				.append("\n");
+
+		sb.append(padRight("==============DADOS DA COMANDA=============", 49) + "COMANDA .: "
+				+ primeiro.getIdBlocoComanda()).append("\n");
+		String dtCmd = primeiro.getDataComanda() != null ? FMT_DATA.format(primeiro.getDataComanda()) : "";
+		sb.append(padRight("Comanda N.: " + primeiro.getIdBlocoComanda(), 49) + "Data Comanda.: " + dtCmd).append("\n");
+
+		sb.append("============== ITENS ======================================================").append("\n");
+		sb.append("Qtde  Valor                                        Total").append("\n");
+		sb.append("      Codigo      Produto").append("\n");
+		sb.append("---------------------------------------------------------------------------").append("\n");
+
+		double totalGeral = 0.0;
+		for (ComandaDetBeans item : itens) {
+			String cod = item.getIdProduto() != null ? item.getIdProduto() : "---";
+			String nome = item.getDescricaoProduto() != null ? item.getDescricaoProduto() : "---";
+			String qty = QTY.format(item.getQtdeComandaDetalhe());
+			String vlrU = BRL.format(item.getVlrUnitarioComandaDetalhe());
+			String vlrT = BRL.format(item.getVlrTotFinalComandaDetalhe());
+
+			sb.append("  " + padRight(cod, 10) + padRight(nome, 38) + padLeft(qty + " X  " + vlrU, 20)).append("\n");
+			sb.append("= " + vlrT).append("\n");
+
+			totalGeral += item.getVlrTotFinalComandaDetalhe();
+		}
+
+		sb.append("---------------------------------------------------------------------------").append("\n");
+
+		String func = primeiro.getNomeFuncionario() != null ? primeiro.getNomeFuncionario() : "";
+		sb.append("  Funcionario .: " + padRight(func, 30) + "CONSUMIDOR").append("\n");
+		sb.append("  Total.: COMANDA EM ABERTO. " + BRL.format(totalGeral)).append("\n");
+		sb.append("  Obs .:").append("\n");
+
+		String cidade = emitente.getCidade() != null ? emitente.getCidade().toUpperCase() : "";
+		@SuppressWarnings("deprecation")
+		String dataExt = primeiro.getDataComanda() != null
+				? new SimpleDateFormat("EEEE, dd 'de' MMMM 'de' yyyy", new Locale("pt", "BR")).format(
+						primeiro.getDataComanda())
+				: "";
+		sb.append("  " + cidade + ", " + dataExt).append("\n");
+
+		sb.append("\f");
+
+		return sb.toString();
+	}
+
+	/**
 	 * Agendar delete.
 	 *
 	 * @param arquivo the arquivo
 	 */
 	private void agendarDelete(File arquivo) {
-		Thread t = new Thread(() -> {
-			while (arquivo.exists()) {
-				try {
-					Thread.sleep(3000);
-					if (arquivo.renameTo(arquivo)) {
-						arquivo.delete();
-						break;
-					}
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-					break;
-				}
-			}
-		});
-		t.setDaemon(true);
-		t.start();
+		arquivo.deleteOnExit();
 	}
 
 	/**
@@ -112,8 +238,9 @@ public class printComandaInvoiceOrder {
 	 */
 	public void openFile(File file) {
 		try {
-			if (Desktop.isDesktopSupported())
+			if (Desktop.isDesktopSupported()) {
 				Desktop.getDesktop().open(file);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -159,14 +286,12 @@ public class printComandaInvoiceOrder {
 	 * @return the string
 	 */
 	private String contentVazio() {
-		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-				+ "<office:document-content"
+		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<office:document-content"
 				+ "  xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\""
 				+ "  xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\""
 				+ "  xmlns:style=\"urn:oasis:names:tc:opendocument:xmlns:style:1.0\""
 				+ "  xmlns:fo=\"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\">"
-				+ "<office:automatic-styles/>"
-				+ "<office:body><office:text/></office:body>"
+				+ "<office:automatic-styles/>" + "<office:body><office:text/></office:body>"
 				+ "</office:document-content>";
 	}
 
@@ -215,11 +340,12 @@ public class printComandaInvoiceOrder {
 		p(sb, padRight("CNPJ.: " + emitente.getCnpj(), 49) + "IE.: " + emitente.getIe(), "Normal");
 		p(sb, padRight("Endereco.: " + emitente.getEndereco(), 49) + "Numero.: " + emitente.getNumero(), "Normal");
 		p(sb, padRight("Bairro.: " + emitente.getBairro(), 49) + "Telefone.: " + emitente.getTelefone(), "Normal");
-		
-		p(sb, padRight("==============DADOS DA COMANDA=============", 49) + "COMANDA .: " + primeiro.getIdBlocoComanda(), "Normal");
+
+		p(sb, padRight("==============DADOS DA COMANDA=============", 49) + "COMANDA .: "
+				+ primeiro.getIdBlocoComanda(), "Normal");
 		String dtCmd = primeiro.getDataComanda() != null ? FMT_DATA.format(primeiro.getDataComanda()) : "";
 		p(sb, padRight("Comanda N.: " + primeiro.getIdBlocoComanda(), 49) + "Data Comanda.: " + dtCmd, "Normal");
-		
+
 		p(sb, "============== ITENS ======================================================", "Normal");
 		p(sb, "Qtde  Valor                                        Total", "Normal");
 		p(sb, "      Codigo      Produto", "Normal");
@@ -234,7 +360,7 @@ public class printComandaInvoiceOrder {
 			String vlrT = BRL.format(item.getVlrTotFinalComandaDetalhe());
 
 			String strLinha1 = "  " + padRight(cod, 10) + padRight(nome, 38) + padLeft(qty + " X  " + vlrU, 20);
-			
+
 			p(sb, strLinha1, "Normal");
 			p(sb, "= " + vlrT, "Normal");
 
@@ -242,15 +368,18 @@ public class printComandaInvoiceOrder {
 		}
 
 		p(sb, "---------------------------------------------------------------------------", "Normal");
-		
+
 		String func = primeiro.getNomeFuncionario() != null ? primeiro.getNomeFuncionario() : "";
 		p(sb, "  Funcionario .: " + padRight(func, 30) + "CONSUMIDOR", "Normal");
 		p(sb, "  Total.: COMANDA EM ABERTO. " + BRL.format(totalGeral), "Normal");
 		p(sb, "  Obs .:", "Normal");
-		
+
 		String cidade = emitente.getCidade() != null ? emitente.getCidade().toUpperCase() : "";
 		@SuppressWarnings("deprecation")
-		String dataExt = primeiro.getDataComanda() != null ? new SimpleDateFormat("EEEE, dd 'de' MMMM 'de' yyyy", new Locale("pt", "BR")).format(primeiro.getDataComanda()) : "";
+		String dataExt = primeiro.getDataComanda() != null
+				? new SimpleDateFormat("EEEE, dd 'de' MMMM 'de' yyyy", new Locale("pt", "BR")).format(
+						primeiro.getDataComanda())
+				: "";
 		p(sb, "  " + cidade + ", " + dataExt, "Normal");
 	}
 
@@ -262,10 +391,13 @@ public class printComandaInvoiceOrder {
 	 * @return the string
 	 */
 	private String padRight(String s, int n) {
-		if (s == null) s = "";
-		if (s.length() > n) return s.substring(0, n);
+		if (s == null)
+			s = "";
+		if (s.length() > n)
+			return s.substring(0, n);
 		StringBuilder sb = new StringBuilder(s);
-		while (sb.length() < n) sb.append(" ");
+		while (sb.length() < n)
+			sb.append(" ");
 		return sb.toString();
 	}
 
@@ -277,10 +409,13 @@ public class printComandaInvoiceOrder {
 	 * @return the string
 	 */
 	private String padLeft(String s, int n) {
-		if (s == null) s = "";
-		if (s.length() > n) return s.substring(0, n);
+		if (s == null)
+			s = "";
+		if (s.length() > n)
+			return s.substring(0, n);
 		StringBuilder sb = new StringBuilder();
-		while (sb.length() < n - s.length()) sb.append(" ");
+		while (sb.length() < n - s.length())
+			sb.append(" ");
 		sb.append(s);
 		return sb.toString();
 	}
@@ -305,17 +440,13 @@ public class printComandaInvoiceOrder {
 	 * @return the string
 	 */
 	private String styles() {
-		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-				+ "<office:document-styles"
+		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<office:document-styles"
 				+ "  xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\""
 				+ "  xmlns:style=\"urn:oasis:names:tc:opendocument:xmlns:style:1.0\""
-				+ "  xmlns:fo=\"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\">"
-				+ "<office:styles>"
+				+ "  xmlns:fo=\"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\">" + "<office:styles>"
 				+ "<style:default-style style:family=\"paragraph\">"
 				+ "<style:text-properties fo:font-family=\"Courier New\" fo:font-size=\"10pt\"/>"
-				+ "</style:default-style>"
-				+ "</office:styles>"
-				+ "</office:document-styles>";
+				+ "</style:default-style>" + "</office:styles>" + "</office:document-styles>";
 	}
 
 	/**
@@ -329,12 +460,12 @@ public class printComandaInvoiceOrder {
 	 * @param weight the weight
 	 * @param align the align
 	 */
-	private void estilo(StringBuilder sb, String nome, String family, String font, String size, String weight, String align) {
+	private void estilo(StringBuilder sb, String nome, String family, String font, String size, String weight,
+			String align) {
 		sb.append("<style:style style:name=\"").append(nome).append("\" style:family=\"").append(family).append("\">");
 		sb.append("<style:paragraph-properties fo:text-align=\"").append(align).append("\"/>");
-		sb.append("<style:text-properties fo:font-family=\"").append(font).append("\"")
-				.append(" fo:font-size=\"").append(size).append("\"")
-				.append(" fo:font-weight=\"").append(weight).append("\"/>");
+		sb.append("<style:text-properties fo:font-family=\"").append(font).append("\"").append(" fo:font-size=\"")
+				.append(size).append("\"").append(" fo:font-weight=\"").append(weight).append("\"/>");
 		sb.append("</style:style>");
 	}
 
@@ -381,10 +512,7 @@ public class printComandaInvoiceOrder {
 	private static String escapeXml(String s) {
 		if (s == null)
 			return "";
-		return s.replace("&", "&amp;")
-				.replace("<", "&lt;")
-				.replace(">", "&gt;")
-				.replace("\"", "&quot;")
-				.replace("'", "&apos;");
+		return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'",
+				"&apos;");
 	}
 }
