@@ -183,9 +183,8 @@ public class printComandaInvoiceOrder {
 		String dtCmd = primeiro.getDataComanda() != null ? FMT_DATA.format(primeiro.getDataComanda()) : "";
 		sb.append(padRight("Comanda N.: " + primeiro.getIdBlocoComanda(), 49) + "Data Comanda.: " + dtCmd).append("\n");
 
-		sb.append("============== ITENS ======================================================").append("\n");
-		sb.append("Qtde  Valor                                        Total").append("\n");
-		sb.append("      Codigo      Produto").append("\n");
+		sb.append(padRight("============== ITENS =====================", 49) + "Codigo      Produto").append("\n");
+		sb.append(padRight("Qtde  Valor", 49) + "Total").append("\n");
 		sb.append("---------------------------------------------------------------------------").append("\n");
 
 		double totalGeral = 0.0;
@@ -193,7 +192,8 @@ public class printComandaInvoiceOrder {
 			String cod = item.getIdProduto() != null ? item.getIdProduto() : "---";
 			String nome = item.getDescricaoProduto() != null ? item.getDescricaoProduto() : "---";
 			String qty = QTY.format(item.getQtdeComandaDetalhe());
-			String vlrU = BRL.format(item.getVlrUnitarioComandaDetalhe());
+			
+			String vlrU = new DecimalFormat("#,##0.00").format(item.getVlrUnitarioComandaDetalhe());
 			String vlrT = BRL.format(item.getVlrTotFinalComandaDetalhe());
 
 			sb.append("  " + padRight(cod, 10) + padRight(nome, 38) + padLeft(qty + " X  " + vlrU, 20)).append("\n");
@@ -205,14 +205,14 @@ public class printComandaInvoiceOrder {
 		sb.append("---------------------------------------------------------------------------").append("\n");
 
 		String func = primeiro.getNomeFuncionario() != null ? primeiro.getNomeFuncionario() : "";
-		sb.append("  Funcionario .: " + padRight(func, 30) + "CONSUMIDOR").append("\n");
+		sb.append(padRight("  Funcionário .: " + func, 49) + "CONSUMIDOR").append("\n");
 		sb.append("  Total.: COMANDA EM ABERTO. " + BRL.format(totalGeral)).append("\n");
 		sb.append("  Obs .:").append("\n");
 
 		String cidade = emitente.getCidade() != null ? emitente.getCidade().toUpperCase() : "";
 		@SuppressWarnings("deprecation")
 		String dataExt = primeiro.getDataComanda() != null
-				? new SimpleDateFormat("EEEE, dd 'de' MMMM 'de' yyyy", new Locale("pt", "BR")).format(
+				? new SimpleDateFormat("EEEE, d 'de' MMMM 'de' yyyy", new Locale("pt", "BR")).format(
 						primeiro.getDataComanda())
 				: "";
 		sb.append("  " + cidade + ", " + dataExt).append("\n");
@@ -346,9 +346,8 @@ public class printComandaInvoiceOrder {
 		String dtCmd = primeiro.getDataComanda() != null ? FMT_DATA.format(primeiro.getDataComanda()) : "";
 		p(sb, padRight("Comanda N.: " + primeiro.getIdBlocoComanda(), 49) + "Data Comanda.: " + dtCmd, "Normal");
 
-		p(sb, "============== ITENS ======================================================", "Normal");
-		p(sb, "Qtde  Valor                                        Total", "Normal");
-		p(sb, "      Codigo      Produto", "Normal");
+		p(sb, padRight("============== ITENS =====================", 49) + "Codigo      Produto", "Normal");
+		p(sb, padRight("Qtde  Valor", 49) + "Total", "Normal");
 		p(sb, "---------------------------------------------------------------------------", "Normal");
 
 		double totalGeral = 0.0;
@@ -356,7 +355,8 @@ public class printComandaInvoiceOrder {
 			String cod = item.getIdProduto() != null ? item.getIdProduto() : "---";
 			String nome = item.getDescricaoProduto() != null ? item.getDescricaoProduto() : "---";
 			String qty = QTY.format(item.getQtdeComandaDetalhe());
-			String vlrU = BRL.format(item.getVlrUnitarioComandaDetalhe());
+			
+			String vlrU = new DecimalFormat("#,##0.00").format(item.getVlrUnitarioComandaDetalhe());
 			String vlrT = BRL.format(item.getVlrTotFinalComandaDetalhe());
 
 			String strLinha1 = "  " + padRight(cod, 10) + padRight(nome, 38) + padLeft(qty + " X  " + vlrU, 20);
@@ -370,14 +370,14 @@ public class printComandaInvoiceOrder {
 		p(sb, "---------------------------------------------------------------------------", "Normal");
 
 		String func = primeiro.getNomeFuncionario() != null ? primeiro.getNomeFuncionario() : "";
-		p(sb, "  Funcionario .: " + padRight(func, 30) + "CONSUMIDOR", "Normal");
+		p(sb, padRight("  Funcionário .: " + func, 49) + "CONSUMIDOR", "Normal");
 		p(sb, "  Total.: COMANDA EM ABERTO. " + BRL.format(totalGeral), "Normal");
 		p(sb, "  Obs .:", "Normal");
 
 		String cidade = emitente.getCidade() != null ? emitente.getCidade().toUpperCase() : "";
 		@SuppressWarnings("deprecation")
 		String dataExt = primeiro.getDataComanda() != null
-				? new SimpleDateFormat("EEEE, dd 'de' MMMM 'de' yyyy", new Locale("pt", "BR")).format(
+				? new SimpleDateFormat("EEEE, d 'de' MMMM 'de' yyyy", new Locale("pt", "BR")).format(
 						primeiro.getDataComanda())
 				: "";
 		p(sb, "  " + cidade + ", " + dataExt, "Normal");

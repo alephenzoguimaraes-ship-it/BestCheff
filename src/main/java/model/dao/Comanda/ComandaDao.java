@@ -91,28 +91,7 @@ public class ComandaDao {
 	 * @param codProd the cod prod
 	 */
 	public void inserirComanda(ComandaBeans cb, ComandaDetBeans cdb, FuncionarioBeans fb, String codProd) {
-		String insert = "INSERT INTO COMANDA_DETALHE (ID_COMANDA_DETALHE, RF_ID_COMANDA, RF_ID_PRODUTO,\n"
-				+ "    QTDE_COMANDA_DETALHE, VLR_UNITARIO_COMANDA_DETALHE,\n"
-				+ "    VLR_TOTAL_COMANDA_DETALHE, VLR_DESCONTO_COMANDA_DETALHE,\n"
-				+ "    VLR_ACRESCIMO_COMANDA_DETALHE, VLR_TOT_FINAL_COMANDA_DETALHE, DATA_COMANDA,\n"
-				+ "    HORA_COMANDA, RF_ID_FUNCIONARIO, GRAVACAO, COMANDA_DETALHE_ITEM)\n"
-				+ "VALUES (\n"
-				+ "    ?, \n"
-				+ "    ?, \n"
-				+ "    ?, \n"
-				+ "    ?, \n"
-				+ "    ?, \n"
-				+ "    ?, \n"
-				+ "    0.00, \n"
-				+ "    0.00, \n"
-				+ "    ?, \n"
-				+ "    current_date, \n"
-				+ "    current_time, \n"
-				+ "    ?, \n"
-				+ "    current_timestamp, \n"
-				+ "    1\n"
-				+ ");\n"
-				+ "";
+		String insert = "EXECUTE PROCEDURE SP_SALVAR_COMANDA_DETALHE (?, ?, ?, ?, ?, ?, ?, ?);";
 		try {
 			pstm = conexao.conectar().prepareStatement(insert);
 			pstm.setLong(1, cb.getIdComanda());
