@@ -3,6 +3,8 @@ package model.dao.accessLevelsDB;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import JDBC.JdbcConnection;
 import accessLevels.accessLevels;
@@ -44,6 +46,7 @@ public class accessLevelsDao {
 			return accessLevels;
 		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.getLogger("SqlBancoLog").log(Level.SEVERE, "Erro ao executar sql no banco", e);
 			return null;
 		} finally {
 			con.desconectar();

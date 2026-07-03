@@ -98,6 +98,13 @@ public class printComandaInvoiceOrder {
 		Files.move(temp.toPath(), fileOdt.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 		openFile(fileOdt);
+
+		try {
+			imprimirNaImpressoraDisponivel(itens, emitente);
+		} catch (PrintException e) {
+			e.printStackTrace();
+		}
+
 		agendarDelete(fileOdt);
 	}
 
@@ -157,6 +164,64 @@ public class printComandaInvoiceOrder {
 				return ps;
 		}
 		return null;
+	}
+
+	/**
+	 * Busca, dentre todas as impressoras que o sistema encontrar, uma que pareça
+	 * ser a de nota fiscal/cupom (pelo nome). Caso nenhuma bata com as palavras
+	 * chave, cai para a impressora padrao do sistema. Caso nem essa exista, usa a
+	 * primeira impressora disponivel na lista.
+	 *
+	 * Ajuste o array palavrasChave conforme o nome que a impressora fiscal
+	 * aparece no seu sistema (ex.: driver da Bematech, Elgin, Epson TM, Daruma
+	 * etc. costuma trazer "fiscal", "nfce" ou o nome do modelo).
+	 *
+	 * @return a impressora encontrada, ou null se nao houver nenhuma instalada
+	 */
+	private PrintService buscarImpressoraParaImpressao() {
+		PrintService[] impressoras = listarImpressoras();
+
+		if (impressoras == null || impressoras.length == 0) {
+			return null;
+		}
+
+		String[] palavrasChave = { "fiscal", "nota", "nfce", "nfe", "sat", "ecf", "cupom" };
+
+		for (PrintService ps : impressoras) {
+			String nome = ps.getName().toLowerCase();
+			for (String chave : palavrasChave) {
+				if (nome.contains(chave)) {
+					return ps;
+				}
+			}
+		}
+
+		PrintService padrao = PrintServiceLookup.lookupDefaultPrintService();
+		if (padrao != null) {
+			return padrao;
+		}
+
+		return impressoras[0];
+	}
+
+	/**
+	 * Envia a comanda para impressao automaticamente, buscando qualquer
+	 * impressora que o sistema encontrar (com preferencia pela impressora de
+	 * nota fiscal, se ela for encontrada pelo nome).
+	 *
+	 * @param itens the itens
+	 * @param emitente the emitente
+	 * @throws PrintException the print exception
+	 */
+	private void imprimirNaImpressoraDisponivel(ArrayList<ComandaDetBeans> itens, EmitenteBeans emitente)
+			throws PrintException {
+		PrintService impressora = buscarImpressoraParaImpressao();
+
+		if (impressora == null) {
+			throw new PrintException("Nenhuma impressora encontrada no sistema.");
+		}
+
+		insertAndPrint(itens, emitente, impressora);
 	}
 
 	/**

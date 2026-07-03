@@ -3,6 +3,8 @@ package model.dao.Produto;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import JDBC.JdbcConnection;
 import model.beans.Produto.ProdutoBeans;
@@ -76,6 +78,7 @@ public class ProdutoDao {
 			return produtos;
 		} catch(Exception e) {
 			e.printStackTrace();
+			Logger.getLogger("SqlBancoLog").log(Level.SEVERE, "Erro ao executar sql no banco", e);
 			return null;
 		} finally {
 			conexao.desconectar();

@@ -3,6 +3,8 @@ package model.dao.Comanda;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import JDBC.JdbcConnection;
 import model.beans.Comandas.ComandaBeans;
@@ -54,6 +56,7 @@ public class ComandaDao {
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        Logger.getLogger("SqlBancoLog").log(Level.SEVERE, "Erro ao executar sql no banco", e);
 	    } finally {
 	        conexao.desconectar();
 	    }
@@ -77,6 +80,7 @@ public class ComandaDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			Logger.getLogger("SqlBancoLog").log(Level.SEVERE, "Erro ao executar sql no banco", e);
 		} finally {
 			conexao.desconectar();
 		}
@@ -105,6 +109,7 @@ public class ComandaDao {
 			pstm.execute();
 		} catch(Exception e) {
 			e.printStackTrace();
+			Logger.getLogger("SqlBancoLog").log(Level.SEVERE, "Erro ao executar sql no banco", e);
 		} finally {
 			conexao.desconectar();
 		}
@@ -144,6 +149,7 @@ public class ComandaDao {
 			return comandasDetalhe;
 		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.getLogger("SqlBancoLog").log(Level.SEVERE, "Erro ao executar sql no banco", e);
 			return null;
 		} finally {
 			conexao.desconectar();

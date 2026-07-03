@@ -3,6 +3,9 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.print.PrintException;
+import javax.print.PrintService;
+
 import accessLevels.accessLevels;
 import impressions.printComandaInvoiceOrder;
 import jakarta.servlet.RequestDispatcher;
@@ -136,7 +139,11 @@ public class controllerFuncionario extends HttpServlet {
 			break;
 		}
 		case "/comandas/send-invoice": {
-			printComandInvoiceOrder(request, response);
+			try {
+				printComandInvoiceOrder(request, response);
+			} catch (ServletException | IOException | PrintException e) {
+				e.printStackTrace();
+			}
 			break;
 		}
 		default:
@@ -298,12 +305,13 @@ public class controllerFuncionario extends HttpServlet {
 	 * @param response the response
 	 * @throws ServletException the servlet exception
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws PrintException 
 	 */
 	protected void printComandInvoiceOrder(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws ServletException, IOException, PrintException {
 		ArrayList<ComandaDetBeans> comandasDetalhes = new ArrayList<>();
 		comandasDetalhes = daoComanda.buscarTodasComandasDet(com);
-		comandInvoiceOrder.insertAndOpen(comandasDetalhes, emitente);
+		comandInvoiceOrder.insertAndPrint(comandasDetalhes, emitente);
 		ArrayList<ProdutoBeans> produtos = new ArrayList<>();
 		produtos = daoProduto.listarProdutos();
 		request.getSession().setAttribute("mostrar-produtos", produtos);

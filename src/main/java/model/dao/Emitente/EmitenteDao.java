@@ -2,6 +2,8 @@ package model.dao.Emitente;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import JDBC.JdbcConnection;
 import model.beans.Emitente.EmitenteBeans;
@@ -63,6 +65,7 @@ public class EmitenteDao {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.getLogger("SqlBancoLog").log(Level.SEVERE, "Erro ao executar sql no banco", e);
 		} finally {
 			con.desconectar();
 		}

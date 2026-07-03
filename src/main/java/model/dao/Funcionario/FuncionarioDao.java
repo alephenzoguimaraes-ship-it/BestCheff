@@ -3,6 +3,8 @@ package model.dao.Funcionario;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import JDBC.JdbcConnection;
 import model.beans.Funcionario.FuncionarioBeans;
@@ -49,6 +51,7 @@ public class FuncionarioDao {
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
+			Logger.getLogger("SqlBancoLog").log(Level.SEVERE, "Erro ao executar sql no banco", e);
 		} finally {
 			con.desconectar();
 		}
