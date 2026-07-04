@@ -32,7 +32,7 @@ Before running the project, make sure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/BestCheff.git
+   git clone https://github.com/alephenzoguimaraes-ship-it/BestCheff.git
    ```
 
 2. Open Eclipse and go to:
