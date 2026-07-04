@@ -29,11 +29,12 @@ import javax.print.attribute.PrintRequestAttributeSet;
 import model.beans.Comandas.ComandaDetBeans;
 import model.beans.Emitente.EmitenteBeans;
 
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class printComandaInvoiceOrder.
  * @author alephe
- * The Class was made by AI with help of one programer.
+ * The Class was made by AI with help of one programmer.
  */
 public class printComandaInvoiceOrder {
 	
@@ -49,7 +50,7 @@ public class printComandaInvoiceOrder {
 	
 	/** The Constant FMT_DATA. */
 	private static final SimpleDateFormat FMT_DATA = new SimpleDateFormat("dd/MM/yyyy");
-
+	
 	/**
 	 * Generate odt.
 	 *
@@ -167,16 +168,9 @@ public class printComandaInvoiceOrder {
 	}
 
 	/**
-	 * Busca, dentre todas as impressoras que o sistema encontrar, uma que pareça
-	 * ser a de nota fiscal/cupom (pelo nome). Caso nenhuma bata com as palavras
-	 * chave, cai para a impressora padrao do sistema. Caso nem essa exista, usa a
-	 * primeira impressora disponivel na lista.
+	 * Buscar impressora para impressao.
 	 *
-	 * Ajuste o array palavrasChave conforme o nome que a impressora fiscal
-	 * aparece no seu sistema (ex.: driver da Bematech, Elgin, Epson TM, Daruma
-	 * etc. costuma trazer "fiscal", "nfce" ou o nome do modelo).
-	 *
-	 * @return a impressora encontrada, ou null se nao houver nenhuma instalada
+	 * @return the prints the service
 	 */
 	private PrintService buscarImpressoraParaImpressao() {
 		PrintService[] impressoras = listarImpressoras();
@@ -205,9 +199,7 @@ public class printComandaInvoiceOrder {
 	}
 
 	/**
-	 * Envia a comanda para impressao automaticamente, buscando qualquer
-	 * impressora que o sistema encontrar (com preferencia pela impressora de
-	 * nota fiscal, se ela for encontrada pelo nome).
+	 * Imprimir na impressora disponivel.
 	 *
 	 * @param itens the itens
 	 * @param emitente the emitente
