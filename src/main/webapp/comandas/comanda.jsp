@@ -18,14 +18,14 @@
     <title>BestCheff-Comandas</title>
 </head>
 <body>
-<!-- Modal de Aviso -->
+
 <div id="modal-aviso" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
      background:rgba(0,0,0,0.65); z-index:9999; justify-content:center; align-items:center;
      backdrop-filter:blur(4px);">
     <div style="background:#1e1e3a; border:1px solid #4f46e5; border-radius:14px;
                 width:360px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.6);
                 animation:popIn .2s ease;">
-        <!-- Header -->
+
         <div style="background:linear-gradient(135deg,#6d28d9,#4f46e5); padding:16px 20px;
                     display:flex; align-items:center; gap:10px;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
@@ -34,7 +34,7 @@
             </svg>
             <span style="color:white; font-weight:600; font-size:14px; letter-spacing:.3px">Atenção</span>
         </div>
-        <!-- Body -->
+
         <div style="padding:28px 24px; text-align:center;">
             <p id="modal-msg" style="color:#e2e8f0; font-size:14px; line-height:1.7; margin:0 0 22px 0;"></p>
             <button onclick="fecharModal()" style="background:linear-gradient(135deg,#6d28d9,#4f46e5);
@@ -43,9 +43,9 @@
         </div>
     </div>
 </div>
+
 <div class="tela">
 
-    <!-- HEADER -->
     <div class="header">
         <div class="header-icon">
             <svg viewBox="0 0 24 24" stroke-width="2">
@@ -59,13 +59,10 @@
         </div>
     </div>
 
-    <!-- PAINÉIS -->
     <div class="paineis">
 
-        <!-- ── PAINEL ESQUERDO ── -->
         <div class="painel-esq">
 
-            <!-- Busca por código da comanda -->
             <div>
                 <p class="secao-titulo">Buscar Comanda</p>
                 <div class="busca-grid">
@@ -88,7 +85,6 @@
                 </div>
             </div>
 
-            <!-- Tabela de itens -->
             <div class="tabela-wrap">
                 <table>
                     <thead>
@@ -114,18 +110,16 @@
                             <td class="qtde"><%= p.getQtde() %></td>
                         </tr>
                     <%}%>
-                        <tr><td colspan="3" class="vazio">— Adicione itens à comanda —</td></tr>
                     </tbody>
                 </table>
             </div>
 
         </div>
-        <!-- ── PAINEL DIREITO ── -->
+
         <div class="painel-dir">
 		<form id="form-insert-comanda" name="insert-comanda-form" action="insert-comanda" method="post">
             <p class="secao-titulo">Item da Comanda</p>
 
-            <!-- Código + Nome -->
             <div class="campo-duplo">
                 <div class="campo">
                     <label>Cód.</label>
@@ -137,13 +131,11 @@
                 </div>
             </div>
 
-            <!-- Qtde -->
             <div class="campo">
                 <label>Qtde.</label>
                 <input class="inp" id="Quantidade" type="text" name="qtde" placeholder="1" min="1">
             </div>
 
-            <!-- Valor unit -->
             <div class="campo">
                 <label>Vlr. Unit.</label>
                 <input class="inp" type="text" name="vlr" placeholder="0,00">
@@ -151,13 +143,11 @@
 
             <hr class="divider">
 
-            <!-- Total -->
             <div class="campo">
                 <label>Total</label>
                 <input class="inp inp-total" type="text" name="total" placeholder="0,00" readonly>
             </div>
 
-            <!-- Botões de ação -->
             <div class="btns-acao">
 	                <button id="btn-enviar" class="btn btn-success" type="submit" style="justify-content:center">
 	                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -177,7 +167,7 @@
 	                </button>
                 </form>
 			</div>
-            <!-- Status comanda -->
+
             <div class="status-comanda">
                 <div class="status-item">
                     <span id="ball-open" class="status-dot dot-aberta"></span>
@@ -189,7 +179,6 @@
                 </div>
             </div>
             
-            <!-- Botão Conferência -->
 			<form action="send-invoice" method="post">
 				<button class="btn btn-conferencia" type="submit">
 				    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -202,60 +191,28 @@
 			</form>
 
         </div>
-        <!-- /painel dir -->
 
-    </div><!-- /paineis -->
+    </div>
 
-    <!-- FOOTER -->
     <div class="footer">
         <span>Comanda Digital</span>
         <em id="info-funcionario"></em>
     </div>
 	
 	<script>
-	<% String verify = (String) request.getAttribute("status-comanda"); %>
-	    let status = "<%= verify %>";
-	
-	    function mostrarModal(msg) {
-	        document.getElementById('modal-msg').innerHTML = msg;
-	        document.getElementById('modal-aviso').style.display = 'flex';
-	    }
-	    function fecharModal() {
-	        document.getElementById('modal-aviso').style.display = 'none';
-	    }
-	
-	    // Fecha clicando fora do card
-	    document.getElementById('modal-aviso').addEventListener('click', function(e) {
-	        if (e.target === this) fecharModal();
-	    });
-	
-	    // Clique nas linhas da tabela — só se Aberto
-	    if (status === "Aberto") {
-	        document.querySelectorAll('tbody tr').forEach(function(tr) {
-	            tr.addEventListener('click', function() {
-	                let cod   = tr.querySelector('td.cod')   ? tr.querySelector('td.cod').innerText   : '';
-	                let nome  = tr.querySelector('td.nome')  ? tr.querySelector('td.nome').innerText  : '';
-	                let preco = tr.querySelector('td.preco') ? tr.querySelector('td.preco').innerText : '';
-	                document.querySelector('[name="cod"]').value  = cod;
-	                document.querySelector('[name="nome"]').value = nome;
-	                document.querySelector('[name="vlr"]').value  = preco;
-	                document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('sel'));
-	                tr.classList.add('sel');
-	                document.getElementById('Quantidade').focus();
-	            });
-	        });
-	    }
-	
-	    // Botão Enviar — valida antes de qualquer coisa
-	    document.getElementById('btn-enviar').addEventListener('click', function() {
-	        if (status === "Fechado") {
-	            mostrarModal("Não é possível inserir o produto.<br><strong>A comanda está fechada!</strong>");
-	        } else if (status === "null" || status === "") {
-	            mostrarModal("Nenhuma comanda selecionada.<br><strong>Busque uma comanda primeiro!</strong>");
-	        } else {
-	            // Aqui vai a lógica de envio do produto
-	        }
-	    });
+        document.querySelectorAll('tbody tr').forEach(function(tr) {
+            tr.addEventListener('click', function() {
+                let cod   = tr.querySelector('td.cod')   ? tr.querySelector('td.cod').innerText   : '';
+                let nome  = tr.querySelector('td.nome')  ? tr.querySelector('td.nome').innerText  : '';
+                let preco = tr.querySelector('td.preco') ? tr.querySelector('td.preco').innerText : '';
+                document.querySelector('[name="cod"]').value  = cod;
+                document.querySelector('[name="nome"]').value = nome;
+                document.querySelector('[name="vlr"]').value  = preco;
+                document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('sel'));
+                tr.classList.add('sel');
+                document.getElementById('Quantidade').focus();
+            });
+        });
 	</script>
 	
 	<script>
@@ -298,11 +255,7 @@
 	    if(statusComanda != null) {
 	%>
 	    <script>
-		    let statusVindoDoJava = "<%= statusComanda %>";
-		    if (statusVindoDoJava !== "null" && statusVindoDoJava !== "") {
-		        localStorage.setItem("statusComandaSalvo", statusVindoDoJava);
-		    }
-		    let statusValor = localStorage.getItem("statusComandaSalvo");
+		    let statusValor = "<%= statusComanda %>";
 		    let alertOpen = document.getElementById('ball-open');
 		    let alertClose = document.getElementById('ball-close');
 		    if(statusValor === "Aberto") {

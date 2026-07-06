@@ -99,8 +99,8 @@ public class controllerFuncionario extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		request.setCharacterEncoding("ISO8859_1");
-		response.setCharacterEncoding("ISO8859_1");
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 	}
 
 	/**
@@ -113,8 +113,8 @@ public class controllerFuncionario extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.setCharacterEncoding("ISO8859_1");
-		response.setCharacterEncoding("ISO8859_1");
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		action = request.getServletPath();
 		System.out.println("Controller in: " + action);
 		switch (action) {
@@ -264,6 +264,7 @@ public class controllerFuncionario extends HttpServlet {
 	protected void buscarProduto(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ArrayList<ProdutoBeans> produtos = new ArrayList<ProdutoBeans>();
+		System.out.println("Pesquisando por: "+request.getParameter("nomeProduto"));
 		produtos = daoProduto.buscarProdutoNome(request.getParameter("nomeProduto"));
 		request.getSession().setAttribute("mostrar-produtos", produtos);
 		RequestDispatcher rd = request.getRequestDispatcher("/comandas/comanda.jsp");
