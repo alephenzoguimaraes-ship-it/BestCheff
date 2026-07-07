@@ -103,7 +103,7 @@ public class printComandaInvoiceOrder {
 		printerMatrix.printTextLinCol(line, 52, "Data Comanda.: " + dtComanda);
 
 		// Header from itens
-		printerMatrix.printTextLinCol(++line, 4, "============== ITENS =====================");
+		printerMatrix.printTextLinCol(++line, 4, "============== ITENS ======================");
 		printerMatrix.printTextLinCol(line, 52, "Codigo      Produto");
 		printerMatrix.printTextLinCol(++line, 4, "Qtde  Valor");
 		printerMatrix.printTextLinCol(line, 52, "Total");
@@ -145,8 +145,6 @@ public class printComandaInvoiceOrder {
 		printerMatrix.toFile(path);
 
 		print();
-		
-		deleteAfterClose();
 	}
 	
 	/**
@@ -176,6 +174,8 @@ public class printComandaInvoiceOrder {
 			System.out.println("Erro ao ler o arquivo da comanda: " + e.getMessage());
 		} catch (PrintException e) {
 			System.out.println("Erro ao enviar para a impressora: " + e.getMessage());
+		} finally {
+			deleteAfterClose();
 		}
 	}
 	
