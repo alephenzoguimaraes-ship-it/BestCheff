@@ -1,5 +1,6 @@
 package impressions;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -128,7 +129,7 @@ public class printComandaInvoiceOrder {
 		// Footer
 		printerMatrix.printTextLinCol(++line, 4, "---------------------------------------------------------------------------");
 		String func = comandaDetalhe.getNomeFuncionario() != null ? comandaDetalhe.getNomeFuncionario() : "";
-		printerMatrix.printTextLinCol(++line, 4, "  Vendedor .: " + func);
+		printerMatrix.printTextLinCol(++line, 4, "  Funcionário .: " + func);
 		printerMatrix.printTextLinCol(line, 52, "CONSUMIDOR");
 		printerMatrix.printTextLinCol(++line, 4, "  Total.: COMANDA EM ABERTO. " + BRL.format(totalGeral));
 		printerMatrix.printTextLinCol(++line, 4, "  Obs .:");
@@ -145,6 +146,8 @@ public class printComandaInvoiceOrder {
 		printerMatrix.toFile(path);
 
 		print();
+		
+		line = 1;
 	}
 	
 	/**
@@ -155,7 +158,7 @@ public class printComandaInvoiceOrder {
  
 		if (defaultPrint == null) {
 			System.out.println("Nenhuma impressora padrão configurada no sistema.\n"
-		    + "Configure uma impressora padrão no Windows e tente novamente.");
+		    + "Configure uma impressora padrão no Windows/linux e tente novamente.");
 			return;
 		}
 		
@@ -176,6 +179,9 @@ public class printComandaInvoiceOrder {
 			System.out.println("Erro ao enviar para a impressora: " + e.getMessage());
 		} finally {
 			deleteAfterClose();
+			if(new File(this.path).exists()) {
+				new File(this.path).delete();
+			}
 		}
 	}
 	

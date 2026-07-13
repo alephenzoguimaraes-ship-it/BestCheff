@@ -333,9 +333,9 @@
 	<script>
 		<%String enviadoComSucesso = (String) session.getAttribute("get-invoice");
 		  if(enviadoComSucesso != null) {%>
+			console.log('<%= enviadoComSucesso %>');
 		  mostrarModal("<%= enviadoComSucesso %>");
 		<%
-			session.removeAttribute("get-invoice");
 		  }%>
 	</script>
 </div>
