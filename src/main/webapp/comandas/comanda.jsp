@@ -44,6 +44,17 @@
     </div>
 </div>
 
+<script>
+    function mostrarModal(mensagem) {
+        document.getElementById('modal-msg').innerText = mensagem;
+        document.getElementById('modal-aviso').style.display = 'flex';
+    }
+
+    function fecharModal() {
+        document.getElementById('modal-aviso').style.display = 'none';
+    }
+</script>
+
 <div class="tela">
 
     <div class="header">
@@ -113,7 +124,6 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
 
         <div class="painel-dir">
@@ -225,7 +235,6 @@
 	
 	        var total = vlr * qtde;
 	
-	        // formata de volta pra moeda brasileira
 	        document.querySelector('[name="total"]').value = total.toLocaleString('pt-BR', {
 	            minimumFractionDigits: 2,
 	            maximumFractionDigits: 2

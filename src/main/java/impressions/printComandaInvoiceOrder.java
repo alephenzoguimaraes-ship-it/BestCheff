@@ -154,35 +154,35 @@ public class printComandaInvoiceOrder {
 	 * Prints the.
 	 */
 	private void print() {
-		PrintService defaultPrint = PrintServiceLookup.lookupDefaultPrintService();
- 
-		if (defaultPrint == null) {
-			System.out.println("Nenhuma impressora padrão configurada no sistema.\n"
-		    + "Configure uma impressora padrão no Windows/linux e tente novamente.");
-			return;
-		}
-		
-		try (FileInputStream content = new FileInputStream(this.path)) {
-			DocFlavor flavor = DocFlavor.INPUT_STREAM.TEXT_PLAIN_HOST;
-			Doc document = new SimpleDoc(content, flavor, null);
- 
-			PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
-			attributes.add(new Copies(1));
- 
-			DocPrintJob job = defaultPrint.createPrintJob();
-			job.print(document, attributes);
- 
-			System.out.println("Comanda enviada para impressão em: " + defaultPrint.getName());
-		} catch (IOException e) {
-			System.out.println("Erro ao ler o arquivo da comanda: " + e.getMessage());
-		} catch (PrintException e) {
-			System.out.println("Erro ao enviar para a impressora: " + e.getMessage());
-		} finally {
-			deleteAfterClose();
-			if(new File(this.path).exists()) {
-				new File(this.path).delete();
-			}
-		}
+	    PrintService defaultPrint = DefaultPrintServiceResolver.resolve();
+
+	    if (defaultPrint == null) {
+	        System.out.println("Nenhuma impressora padrão configurada no sistema.\n"
+	            + "Configure uma impressora padrão no Windows/linux e tente novamente.");
+	        return;
+	    }
+
+	    try (FileInputStream content = new FileInputStream(this.path)) {
+	        DocFlavor flavor = DocFlavor.INPUT_STREAM.TEXT_PLAIN_HOST;
+	        Doc document = new SimpleDoc(content, flavor, null);
+
+	        PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
+	        attributes.add(new Copies(1));
+
+	        DocPrintJob job = defaultPrint.createPrintJob();
+	        job.print(document, attributes);
+
+	        System.out.println("Comanda enviada para impressão em: " + defaultPrint.getName());
+	    } catch (IOException e) {
+	        System.out.println("Erro ao ler o arquivo da comanda: " + e.getMessage());
+	    } catch (PrintException e) {
+	        System.out.println("Erro ao enviar para a impressora: " + e.getMessage());
+	    } finally {
+	        deleteAfterClose();
+	        if (new File(this.path).exists()) {
+	            new File(this.path).delete();
+	        }
+	    }
 	}
 	
 	/**
